@@ -1,0 +1,27 @@
+@use './variables' as *;
+
+/*------------------------------------------------------- 
+   Added Mixins and media Queries for Tablet and 
+    Desktop breakpoints 
+  -------------------------------------------------------*/
+@mixin tablet {
+    @media screen and (min-width:$tablet-breakpoint) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media screen and (min-width:$desktop-breakpoint) {
+        @content;
+    }
+}
+
+/*-----------------------------------------------------------
+   Added common Mixins for Setting Fonts 
+-----------------------------------------------------------*/
+@mixin set-font ($fontSize, $lineHeight, $fontWeight) {
+    font-size: $fontSize;
+    line-height: $lineHeight ;
+    font-weight: $fontWeight;
+}
+
