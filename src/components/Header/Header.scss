@@ -1,0 +1,31 @@
+@use "./../../styles/partials/variables" as *;
+@use "./../../styles/partials/mixins" as *;
+.header { 
+    background-color:$primary-white;
+    display: flex;
+    flex-direction: row;
+    gap:2rem;
+    align-items: center;
+    margin: 0 0.8rem;
+
+    &__logo-image{
+        height:10.5rem;
+    }
+
+    &__title {
+        @include set-font(1.5rem, 4.25rem, 600);
+        //text-shadow: 2px 2px 4px $primary-black;          
+    }
+}
+
+.navbar {
+    display: flex;
+    gap: 2rem;
+    margin-left: 5rem; 
+    margin-top: 6rem;
+    @include set-font(1rem, 1.38rem, 400);   
+
+    &__link {       
+        @include set-navlink-style;
+    }   
+}
