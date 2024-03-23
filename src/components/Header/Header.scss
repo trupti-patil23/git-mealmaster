@@ -23,8 +23,7 @@
     gap: 2rem;
     margin-left: 5rem; 
     margin-top: 6rem;
-    @include set-font(1rem, 1.38rem, 400);   
-
+    
     &__link {       
         @include set-navlink-style;
     }   

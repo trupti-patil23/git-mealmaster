@@ -17,11 +17,11 @@ const Header = () => {
             <div>
                 <div className="navbar">
                     <NavLink to="/" className="navbar__link">
-                        SignIN
+                        Sign In
                     </NavLink>
 
                     <NavLink to="/signup" className="navbar__link">
-                        SignUP
+                        Sign Up
                     </NavLink>
                 </div>
             </div>

@@ -37,8 +37,8 @@
     width: 15rem;
 
     &::placeholder {
-        color: $primary-black;
-        font-size: medium;
+        color: $primary-grey;
+        font-size: 1rem;
     }
 
     &:focus {
@@ -59,21 +59,22 @@
     background-color: $primary-site-color;
     border-style: none;
     color: $primary-white;
-    margin-bottom: 2rem;
-    font-weight: 600;
+    margin-bottom: 2rem;   
+    @include set-font(1rem, 1.38rem, 600); 
 }
 
 /*-----------------------------------------------------------
    Added common Mixins for Setting styling Button for site
 -----------------------------------------------------------*/
 @mixin set-navlink-style {
-    color: $primary-black;
-    font-weight: 600;
+    color: $primary-black;    
     text-decoration: none;
-    padding-top: 0.3rem;
-    text-align: center;
-    height: 2rem;
-    width:10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+    height: 2.5rem;
+    width: 10rem; 
+    @include set-font(1rem, 1.38rem, 600); 
 
     &:hover {
         text-decoration: underline;
@@ -81,11 +82,8 @@
     }
 
     &.active {
-        color: $primary-white;
-        font-weight: 600;
-        outline: none;
+        color: $primary-white;      
         background-color: $primary-site-color;
-        border-radius: 1.25rem;
-        text-decoration: none;
+        border-radius: 1.25rem;   
     }
 }
