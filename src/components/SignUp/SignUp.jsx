@@ -2,11 +2,14 @@ import "./SignUp.scss";
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from "react-toastify";
+import { MealMasterApi } from "./../../utils/utils.jsx";
 
 const SignUp = () => {
+    const mealMasterApi = new MealMasterApi();
+    const form = document.getElementById("signup");
 
-     //Setting formData state variable for form input validations
+    //Setting formData state variable for form input validations
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -15,7 +18,7 @@ const SignUp = () => {
         confirmPassword: ''
     });
 
-    function handleInputChange(event) {  
+    function handleInputChange(event) {
         const { name, value } = event.target;
         setFormData({
             ...formData,
@@ -24,44 +27,60 @@ const SignUp = () => {
     }
 
     function handleSubmit(event) {
-        event.preventDefault(); 
+        event.preventDefault();
 
-         // Email validation (basic format check)
-         var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-         if (!emailRegex.test(formData.email)) {
+        // Email validation (basic format check)
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
             toast.error("Invalid email format.");
-             return;
-         }
-        
+            return;
+        }
+
         // Added validation if Password length < 8
         if (formData.password.length < 8) {
             toast.error("Password must be at least 8 characters long.");
             return;
         }
 
-         // Added validation if Passwords do not match
+        // Added validation if Passwords do not match
         if (formData.password !== formData.confirmPassword) {
             toast.error("Passwords do not match.");
             return;
-        } 
+        }
 
-        const userData= {
-            firstName:event.target.firstName.value,
-            lastName:event.target.lastName.value,
-            passowrd:event.target.password.value,
-            email:event.target.email.value
+        const newUserData = {
+            firstName: event.target.firstName.value,
+            lastName: event.target.lastName.value,
+            password: event.target.password.value,
+            email: event.target.email.value
         }
-        console.log(userData);
-        
-       // Show toast notification
-       toast.success("Form submitted successfully!", {
-        onClose: () => {
-          // Navigate to the home page after the toast is closed
-          //navigate("/");
+
+        async function postNewUser(newUserData) {
+            try {
+                const response = await mealMasterApi.postNewUser(newUserData);
+                if (response.status === 201) {
+                    toast.success("New user created successfully! \n Navigate to SignIn tab.", {
+                        onClose: () => {
+                            // Navigate to the home page after the toast is closed
+                            //navigate("/");
+                        }
+                    });
+                    //Add JWT token to local storage
+                    localStorage.setItem("token", response.data.token);
+                }
+            } catch (error) {
+                const status = error.response.status;
+                const message = error.response.data.error;
+                if (status === 409) {
+                    toast.error(`${message}`);
+                } else {
+                    console.log("Error while adding new user: ", error);
+                }
+            }
         }
-      });        
+        postNewUser(newUserData);
+        //form.reset();
     }
-
     return (
         <form className="signup" onSubmit={handleSubmit}>
             <p className="signup__title">Create Account</p>
@@ -132,20 +151,20 @@ const SignUp = () => {
                     value={formData.confirmPassword}
                     placeholder="Confirm Password"
                     onChange={handleInputChange}
-                    required
+
                 />
             </div>
 
             <div className="signup__row">
-                <Link className= "signup__link" to="/">Have an Account ?</Link>
+                <Link className="signup__link" to="/">Have an Account ?</Link>
             </div>
 
             <div className="signup__row">
-                <button className="signup__button" type="submit">Sign In</button>
+                <button className="signup__button" type="submit">Sign Up</button>
             </div>
             <ToastContainer />
         </form>
-          
+
     );
 }
 

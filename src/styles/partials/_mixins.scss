@@ -74,7 +74,7 @@
     align-items: center;  
     height: 2.5rem;
     width: 10rem; 
-    @include set-font(1rem, 1.38rem, 600); 
+    @include set-font(1.1rem, 1.4rem, 600); 
 
     &:hover {
         text-decoration: underline;

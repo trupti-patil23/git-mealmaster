@@ -22,11 +22,10 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.8);
         z-index: 999;
-      }
-      
+      }      
 
     &__title {
-        @include set-font(1.25rem, 1.75rem, 600);
+        @include set-font(1.3rem, 1.75rem, 600);
         align-self: center;
     }
 

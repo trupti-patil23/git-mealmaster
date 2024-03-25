@@ -2,21 +2,37 @@ import axios from "axios";
 
 export class MealMasterApi {
     constructor() {
-        this.baseUrl = "http://localhost:5050";
+        this.baseUrl = "http://localhost:8080"; 
         this.axios = axios.create({
             baseURL: this.baseUrl,
         });
     }
 
     /**
-     * Added to save new user object to database table "Users"
+     * Added to save new user object to database table "users"
      * @param {*} userData 
      */
     async postNewUser(userData) {
         try{
-            await this.axios.post("/registerUser",userData);
-        }catch(error){
-            throw new Error("Failed to post new user: postNewUser() mothod " + error.message);
+            return await this.axios.post("/users/register", userData);          
+        }catch(error){        
+            throw (error);
+        }
+    }
+
+    /**
+     * Added to authorize user if present in users table
+     * @param {*} userData 
+     */
+    async verifyUser(userData,token) {
+        try{
+            return await this.axios.get("/users/login", {
+                headers: { Authorization: `Bearer ${token}`},
+                params:{userData}
+              });                
+        }catch(error){  
+            console.log("Utils",error);      
+            throw (error);
         }
     }
 }
