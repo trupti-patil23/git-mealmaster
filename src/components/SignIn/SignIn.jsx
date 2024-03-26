@@ -1,12 +1,14 @@
 import "./SignIn.scss";
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import { MealMasterApi } from "./../../utils/utils.jsx";
+import NavBar from "./../../components/NavBar/NavBar.jsx";
 
 const SignIn = () => {
     const mealMasterApi = new MealMasterApi();
     const form = document.getElementById("signin");
+    const navigate = useNavigate();
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -15,15 +17,16 @@ const SignIn = () => {
             password: event.target.password.value
         };
 
-        async function verifyUser(userData) {
+        async function authenticateUser(userData) {
             try {
-                const token = localStorage.getItem("token");
-                const response = await mealMasterApi.verifyUser(userData, token);
+                const response = await mealMasterApi.authenticateUser(userData);
                 if (response.status === 201) {
-                    console.log("user Authenticated", response);
-                    //pass user Object to App and the main page(Profile) 
+                    //Add JWT token to local storage
+                    localStorage.setItem("token", response.data.token);  
+                    navigate("/homePage"); 
+                    console.log("Token ",response.data.token);              
                 }
-            } catch (error) {
+            } catch (error) {               
                 const status = error.response.status;
                 const message = error.response.data.error;
 
@@ -35,11 +38,13 @@ const SignIn = () => {
                 }
             }
         }
-        verifyUser(userData);
+        authenticateUser(userData);
         // form.reset();
     }
 
     return (
+        <>  
+        <NavBar />   
         <form className="signin" id="signin" onSubmit={handleSubmit}>
             <p className="signin__title">Create Account</p>
 
@@ -76,6 +81,7 @@ const SignIn = () => {
             </div>
             <ToastContainer />
         </form>
+        </>
     );
 }
 

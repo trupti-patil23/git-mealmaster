@@ -1,13 +1,15 @@
 import "./SignUp.scss";
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { MealMasterApi } from "./../../utils/utils.jsx";
+import NavBar from "./../../components/NavBar/NavBar.jsx";
 
 const SignUp = () => {
     const mealMasterApi = new MealMasterApi();
     const form = document.getElementById("signup");
+    const navigate = useNavigate();
 
     //Setting formData state variable for form input validations
     const [formData, setFormData] = useState({
@@ -59,15 +61,10 @@ const SignUp = () => {
             try {
                 const response = await mealMasterApi.postNewUser(newUserData);
                 if (response.status === 201) {
-                    toast.success("New user created successfully! \n Navigate to SignIn tab.", {
-                        onClose: () => {
-                            // Navigate to the home page after the toast is closed
-                            //navigate("/");
-                        }
-                    });
-                    //Add JWT token to local storage
-                    localStorage.setItem("token", response.data.token);
-                }
+                    toast.success(`${response.data}`, { autoClose: 2000 } );                      
+                    await new Promise(resolve => setTimeout(resolve, 2000)); //sleeps for 2000
+                    navigate("/");                                  
+                }             
             } catch (error) {
                 const status = error.response.status;
                 const message = error.response.data.error;
@@ -82,6 +79,8 @@ const SignUp = () => {
         //form.reset();
     }
     return (
+        <>
+        <NavBar />   
         <form className="signup" onSubmit={handleSubmit}>
             <p className="signup__title">Create Account</p>
 
@@ -164,7 +163,7 @@ const SignUp = () => {
             </div>
             <ToastContainer />
         </form>
-
+        </>
     );
 }
 

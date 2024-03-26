@@ -1,0 +1,10 @@
+@use "./../../styles/partials/mixins" as *;
+.navbar {
+    display: flex;
+    margin-left: 35%; 
+    margin-top: 2rem;
+    
+    &__link {       
+        @include set-navlink-style;
+    }   
+}

@@ -13,18 +13,7 @@ const Header = () => {
             </div>
             <p className="header__title">
                 Your Ultimate Meal Planning Companion!
-            </p>
-            <div>
-                <div className="navbar">
-                    <NavLink to="/" className="navbar__link">
-                        Sign In
-                    </NavLink>
-
-                    <NavLink to="/signup" className="navbar__link">
-                        Sign Up
-                    </NavLink>
-                </div>
-            </div>
+            </p>          
         </header>
     );
 }
