@@ -1,0 +1,17 @@
+@use "./../../styles/partials/mixins" as *;
+@use "./../../styles/partials/variables" as *;
+
+.homepage {
+    &__navbar {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: fit-content;
+        gap:3rem;
+        margin:1rem;        
+    }
+
+    &__navbar-link {
+        @include set-navlink-style;
+    }
+}

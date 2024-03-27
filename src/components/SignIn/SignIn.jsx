@@ -3,13 +3,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link,useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import { MealMasterApi } from "./../../utils/utils.jsx";
-import NavBar from "./../../components/NavBar/NavBar.jsx";
 
-const SignIn = () => {
+const SignIn = ({setLoggedIn}) => {
     const mealMasterApi = new MealMasterApi();
     const form = document.getElementById("signin");
     const navigate = useNavigate();
 
+    /**
+     * When you click on "SignIn" button,this function get called
+     * @param {*} event 
+     */
     function handleSubmit(event) {
         event.preventDefault();
         const userData = {
@@ -22,9 +25,9 @@ const SignIn = () => {
                 const response = await mealMasterApi.authenticateUser(userData);
                 if (response.status === 201) {
                     //Add JWT token to local storage
-                    localStorage.setItem("token", response.data.token);  
-                    navigate("/homePage"); 
-                    console.log("Token ",response.data.token);              
+                    localStorage.setItem("token", response.data.token); 
+                    setLoggedIn(true); 
+                    navigate("/homePage");                                 
                 }
             } catch (error) {               
                 const status = error.response.status;
@@ -42,11 +45,9 @@ const SignIn = () => {
         // form.reset();
     }
 
-    return (
-        <>  
-        <NavBar />   
+    return (       
         <form className="signin" id="signin" onSubmit={handleSubmit}>
-            <p className="signin__title">Create Account</p>
+            <p className="signin__title">SignIn</p>
 
             <div className="signin__row">
                 <label className="signin__label">Email Address:</label>
@@ -80,8 +81,7 @@ const SignIn = () => {
                 <button className="signin__button" type="submit">Sign In</button>
             </div>
             <ToastContainer />
-        </form>
-        </>
+        </form>      
     );
 }
 

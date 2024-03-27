@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { MealMasterApi } from "./../../utils/utils.jsx";
-import NavBar from "./../../components/NavBar/NavBar.jsx";
 
 const SignUp = () => {
     const mealMasterApi = new MealMasterApi();
@@ -78,11 +77,9 @@ const SignUp = () => {
         postNewUser(newUserData);
         //form.reset();
     }
-    return (
-        <>
-        <NavBar />   
+    return (     
         <form className="signup" onSubmit={handleSubmit}>
-            <p className="signup__title">Create Account</p>
+            <p className="signup__title">SignUp</p>
 
             <div className="signup__row">
                 <label className="signup__label">First Name:</label>
@@ -162,8 +159,7 @@ const SignUp = () => {
                 <button className="signup__button" type="submit">Sign Up</button>
             </div>
             <ToastContainer />
-        </form>
-        </>
+        </form>      
     );
 }
 
