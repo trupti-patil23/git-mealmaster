@@ -1,5 +1,4 @@
 import axios from "axios";
-
 export class MealMasterApi {
     constructor() {
         this.baseUrl = "http://localhost:8080";
