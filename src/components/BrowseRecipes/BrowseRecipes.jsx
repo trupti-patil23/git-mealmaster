@@ -7,11 +7,20 @@ import addIcon from "./../../assets/icons/SVG/icons-add.png";
 const BrowseRecipes = () => {
     const recipeApi = new RecipesApi();
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const recipeDetails = [{ reciepeId: '', recipeName: '', recipeImageLink: '', recipeLink: '', ingredients: [] }];
     const [mealType, setMealType] = useState("");
     const [mealCategory, setMealCategory] = useState("");
     const [recipes, setRecipes] = useState([]);
-    const [mealsPlanData, setMealsPlanData] = useState([]);
+
+    const [mealsPlanData, setMealsPlanData] = useState([
+        { breakfast: "", lunch: "", dinner: "" },
+        { breakfast: "", lunch: "", dinner: "" },
+        { breakfast: "", lunch: "", dinner: "" },
+        { breakfast: "", lunch: "", dinner: "" },
+        { breakfast: "", lunch: "", dinner: "" },
+        { breakfast: "", lunch: "", dinner: "" },
+        { breakfast: "", lunch: "", dinner: "" }
+    ]);
+
     const [showDayInput, setShowDayInput] = useState(false); //State varible to manage form to get a day from user
     const [cardId, setCardId] = useState('');
     /**
@@ -23,9 +32,13 @@ const BrowseRecipes = () => {
         setMealCategory(mealCategoryValue);
 
         async function getLunchDinnerData(mealCategoryValue) {
-            const response = await recipeApi.getRecipesListAsPerCategory(mealCategoryValue);
-            console.log("lunch dinner:", response.meals);
-            setRecipes(response.meals);
+            try {
+                const response = await recipeApi.getRecipesListAsPerCategory(mealCategoryValue);
+                console.log("lunch dinner:", response.meals);
+                setRecipes(response.meals);
+            } catch (error) {
+                console.log("Error getting Lunch and Dinner Data  getLunchDinnerData()", error);
+            }
         }
         getLunchDinnerData(mealCategoryValue);
     };
@@ -38,10 +51,14 @@ const BrowseRecipes = () => {
         setMealType(value);
         if (value === "breakfast") {
             async function getBreakfastData() {
-                const response = await recipeApi.getRecipesListAsPerCategory("breakfast");
-                const dessertResponse = await recipeApi.getRecipesListAsPerCategory("Dessert");
-                let breakfastRecipes = [...response.meals, ...dessertResponse.meals];
-                setRecipes(breakfastRecipes);
+                try {
+                    const response = await recipeApi.getRecipesListAsPerCategory("breakfast");
+                    const dessertResponse = await recipeApi.getRecipesListAsPerCategory("Dessert");
+                    let breakfastRecipes = [...response.meals, ...dessertResponse.meals];
+                    setRecipes(breakfastRecipes);
+                } catch (error) {
+                    console.log("Error getting breakfast Data  getBreakfastData()", error);
+                }
             }
             getBreakfastData();
         }
@@ -62,12 +79,55 @@ const BrowseRecipes = () => {
     const handleDayInputChange = (event, recipeData) => {
         const inputDayValue = event.target.value;
         const index = daysOfWeek.findIndex((day) => (day.toLowerCase() === inputDayValue.toLowerCase()));
-        console.log(index);
+        let ingredientList = [];
+
+        async function getIngredientList() {
+            try {
+                const response = await recipeApi.getIngredientList(recipeData.idMeal);
+                const meals = response.meals[0];
+                for (let i = 1; i < 20; i++) {
+                    let propertyName = "strIngredient" + i;
+                    console.log(meals[propertyName]);
+                    if (meals[propertyName]) {
+                        ingredientList.push(meals[propertyName]);
+                    }
+                }
+            } catch (error) {
+                console.log("Error getting ingredient list  getIngredientList()", error);
+            }
+        }
+        getIngredientList();
+
+        const recipeDetails = {
+            id: recipeData.idMeal,
+            name: recipeData.strMeal,
+            //imageLink: recipeData.strMealThumb,
+            recipeLink: `https://www.themealdb.com/meal/${recipeData.idMeal}-${recipeData.strMeal.replace(/ /g, "-")}-Recipe`,
+            ingredients: ingredientList
+        }
+
+        let mealsArray = [...mealsPlanData]; //to change memory location of stored array
+        if (mealType.toLowerCase() === "breakfast") {
+            mealsArray[index].breakfast = recipeDetails.name;
+        } else if (mealType.toLowerCase() === "lunch") {
+            mealsArray[index].lunch = recipeDetails.name;
+        } else if (mealType.toLowerCase() === "dinner") {
+            mealsArray[index].dinner = recipeDetails.name;
+        }
+        setMealsPlanData(mealsArray);
+    }
+
+    /**
+     * When user click on "Save Meal Plan" button, Plean will save to the backend table
+     * @param {*} event 
+     */
+    const handleSubmitPlan = (event) => {
+
     }
 
     return (
         <>
-            <form className="recipes">
+            <form className="recipes" onClick={handleSubmitPlan}>
                 <div className="recipes__first-column">
                     <div className="recipes__radio recipes__row">
                         <p className="recipes__radio-label">Meal Type:</p>
@@ -124,19 +184,44 @@ const BrowseRecipes = () => {
                 </div>
 
                 <div className="recipes__second-column">
-                    <div className="plan-table">
-                        <div className="plan-table__header">
-                            {
-                                daysOfWeek.map((day) => (
-                                    <div className="plan-table__header-day">{day}</div>
-                                ))}
-                        </div>
-                        <div className="plan-table__data">
-                            {
-                                mealsPlanData.map((meal) => (<div>{meal}</div>))
-                            }
-                        </div>
-                    </div>
+                    <table className="plan-table">
+                        <thead>
+                            <tr>
+                                <th>Meal Type</th>
+                                {daysOfWeek.map((day) => (<th>{day}</th>))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td >
+                                <tr><div className="plan-table__data">Breakfast</div></tr>
+                                <tr><div className="plan-table__data">Lunch</div></tr>
+                                <tr><div className="plan-table__data">Dinner</div></tr>
+                            </td>
+
+                            {mealsPlanData.map((dayMeal) => {
+                                return (
+                                    <td>
+                                        <tr>
+                                            <div className="plan-table__data">
+                                                {dayMeal.breakfast}
+                                            </div>
+                                        </tr>
+
+                                        <tr>
+                                            <div className="plan-table__data">
+                                                {dayMeal.lunch}
+                                            </div>
+                                        </tr>
+                                        <tr>
+                                            <div className="plan-table__data">
+                                                {dayMeal.dinner}
+                                            </div>
+                                        </tr>
+                                    </td>                                    
+                                )
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             </form>
 
