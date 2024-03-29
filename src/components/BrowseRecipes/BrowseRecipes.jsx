@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { RecipesApi } from "./../../utils/RecipesApi";
 import addIcon from "./../../assets/icons/SVG/icons-add.png";
+import MealPlanTable from "./../../components/MealPlanTable/MealPlanTable.jsx";
 
 const BrowseRecipes = () => {
     const recipeApi = new RecipesApi();
@@ -11,14 +12,24 @@ const BrowseRecipes = () => {
     const [mealCategory, setMealCategory] = useState("");
     const [recipes, setRecipes] = useState([]);
 
+    // const [mealsPlanData, setMealsPlanData] = useState([
+    //     { breakfast: "", lunch: "", dinner: "" },
+    //     { breakfast: "", lunch: "", dinner: "" },
+    //     { breakfast: "", lunch: "", dinner: "" },
+    //     { breakfast: "", lunch: "", dinner: "" },
+    //     { breakfast: "", lunch: "", dinner: "" },
+    //     { breakfast: "", lunch: "", dinner: "" },
+    //     { breakfast: "", lunch: "", dinner: "" }
+    // ]);
+
     const [mealsPlanData, setMealsPlanData] = useState([
-        { breakfast: "", lunch: "", dinner: "" },
-        { breakfast: "", lunch: "", dinner: "" },
-        { breakfast: "", lunch: "", dinner: "" },
-        { breakfast: "", lunch: "", dinner: "" },
-        { breakfast: "", lunch: "", dinner: "" },
-        { breakfast: "", lunch: "", dinner: "" },
-        { breakfast: "", lunch: "", dinner: "" }
+        { breakfast: [], lunch: [], dinner: [] },
+        { breakfast: [], lunch: [], dinner: [] },
+        { breakfast: [], lunch: [], dinner: [] },
+        { breakfast: [], lunch: [], dinner: [] },
+        { breakfast: [], lunch: [], dinner: [] },
+        { breakfast: [], lunch: [], dinner: [] },
+        { breakfast: [], lunch: [], dinner: [] }
     ]);
 
     const [showDayInput, setShowDayInput] = useState(false); //State varible to manage form to get a day from user
@@ -86,8 +97,7 @@ const BrowseRecipes = () => {
                 const response = await recipeApi.getIngredientList(recipeData.idMeal);
                 const meals = response.meals[0];
                 for (let i = 1; i < 20; i++) {
-                    let propertyName = "strIngredient" + i;
-                    console.log(meals[propertyName]);
+                    let propertyName = "strIngredient" + i;                   
                     if (meals[propertyName]) {
                         ingredientList.push(meals[propertyName]);
                     }
@@ -97,23 +107,33 @@ const BrowseRecipes = () => {
             }
         }
         getIngredientList();
+        const recipeLink= `https://www.themealdb.com/meal/${recipeData.idMeal}-${recipeData.strMeal.replace(/ /g, "-")}-Recipe`;
 
-        const recipeDetails = {
-            id: recipeData.idMeal,
-            name: recipeData.strMeal,
-            //imageLink: recipeData.strMealThumb,
-            recipeLink: `https://www.themealdb.com/meal/${recipeData.idMeal}-${recipeData.strMeal.replace(/ /g, "-")}-Recipe`,
-            ingredients: ingredientList
-        }
+        // const recipeDetails = {
+        //     id: recipeData.idMeal,
+        //     name: recipeData.strMeal,
+        //     imageLink: recipeData.strMealThumb,
+        //     recipeLink: `https://www.themealdb.com/meal/${recipeData.idMeal}-${recipeData.strMeal.replace(/ /g, "-")}-Recipe`,
+        //     ingredients: ingredientList
+        // }
+
+        const recipeDetails=[];
+        recipeDetails.push(recipeData.idMeal)  //0 : RecipeId 
+        recipeDetails.push(recipeData.strMeal) //1:Recipe Name
+        recipeDetails.push(recipeData.strMealThumb) //2 : ImageLink
+        recipeDetails.push(recipeLink); //3:RecipeLink
+        recipeDetails.push(ingredientList); //4:ingredientList(ARRAY)
+        console.log("recipeDetails  ---->",recipeDetails);
 
         let mealsArray = [...mealsPlanData]; //to change memory location of stored array
         if (mealType.toLowerCase() === "breakfast") {
-            mealsArray[index].breakfast = recipeDetails.name;
+            mealsArray[index].breakfast = recipeDetails;
         } else if (mealType.toLowerCase() === "lunch") {
-            mealsArray[index].lunch = recipeDetails.name;
+            mealsArray[index].lunch = recipeDetails;
         } else if (mealType.toLowerCase() === "dinner") {
-            mealsArray[index].dinner = recipeDetails.name;
+            mealsArray[index].dinner =recipeDetails;
         }
+        console.log("Meals Array :",mealsArray);
         setMealsPlanData(mealsArray);
     }
 
@@ -184,55 +204,16 @@ const BrowseRecipes = () => {
                 </div>
 
                 <div className="recipes__second-column">
-                    <table className="plan-table">
-                        <thead>
-                            <tr>
-                                <th>Meal Type</th>
-                                {daysOfWeek.map((day) => (<th>{day}</th>))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <td >
-                                <tr><div className="plan-table__data">Breakfast</div></tr>
-                                <tr><div className="plan-table__data">Lunch</div></tr>
-                                <tr><div className="plan-table__data">Dinner</div></tr>
-                            </td>
-
-                            {mealsPlanData.map((dayMeal) => {
-                                return (
-                                    <td>
-                                        <tr>
-                                            <div className="plan-table__data">
-                                                {dayMeal.breakfast}
-                                            </div>
-                                        </tr>
-
-                                        <tr>
-                                            <div className="plan-table__data">
-                                                {dayMeal.lunch}
-                                            </div>
-                                        </tr>
-                                        <tr>
-                                            <div className="plan-table__data">
-                                                {dayMeal.dinner}
-                                            </div>
-                                        </tr>
-                                    </td>                                    
-                                )
-                            })}
-                        </tbody>
-                    </table>
+                    <MealPlanTable mealsPlanData = {mealsPlanData}/>                    
                 </div>
             </form>
 
             <div className="card-container">
-                {
-
-                    recipes?.map((recipe) => {
+                {   recipes?.map((recipe) => {
                         return (
                             <div key={recipe.idMeal} className="card-container__card">
                                 <Link to={`https://www.themealdb.com/meal/${recipe.idMeal}-${recipe.strMeal.replace(/ /g, "-")}-Recipe`}
-                                    target="_blank">
+                                    target="_blank" className="card-container__link">
                                     <img src={recipe.strMealThumb} alt="RecipeImage" className="card-container__image" />
                                     <div className="card-container__recipe-name" >{recipe.strMeal} </div>
                                 </Link>
@@ -260,9 +241,7 @@ const BrowseRecipes = () => {
                     })
                 }
             </div>
-
         </>
-
     );
 }
 
