@@ -47,4 +47,16 @@ export class MealMasterApi {
             throw (error);
         }
     }
+
+     /**
+     * Added to save meal plan to database table meal_plans
+     * @param {*} mealPlansToSave 
+     */
+     async saveMealPlan(mealPlansToSave) {
+        try {            
+            return await this.axios.post("/meals/saveMealPlan", mealPlansToSave);
+        } catch (error) {
+            throw (error);
+        }
+    }
 }

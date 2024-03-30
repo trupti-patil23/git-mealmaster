@@ -22,18 +22,16 @@ function App() {
    */
   async function getUserProfileData() {
     // get token from localStorage if it exists/is set
-    const token = localStorage.getItem("token");   
+    const token = localStorage.getItem("token");
 
     try {
       const response = await mealMasterApi.getUserProfileData(token);
       console.log("User data  ", response.data);
       setUserData(response.data);
       setLoggedIn(true);
-
     } catch (error) {
       const status = error.response.status;
       const message = error.response.data.error;
-
       if (status === 401) {
         toast.error(`${message}`);
       }
@@ -47,11 +45,11 @@ function App() {
     // Fetch user data using the token stored in local storage
     getUserProfileData();
   }, []); // Run only once on component mount
-  
-   /*
-   * Logout of application, clears localStorage JWT token and set state to logged out
-   */
-   function handleLogout() {
+
+  /*
+  * Logout of application, clears localStorage JWT token and set state to logged out
+  */
+  function handleLogout() {
     localStorage.removeItem("token");
     setLoggedIn(false);
     setUserData({});
@@ -59,17 +57,17 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header loggedIn={loggedIn} handleLogout={handleLogout}  />
+      <Header loggedIn={loggedIn} handleLogout={handleLogout} />
       <Routes>
-        <Route path="/" element={loggedIn ?  <HomePage/> : <SignIn setLoggedIn = {setLoggedIn} />} />
+        <Route path="/" element={loggedIn ? <HomePage /> : <SignIn setLoggedIn={setLoggedIn} />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/homePage" element={loggedIn ?  <HomePage  /> :<SignIn setLoggedIn = {setLoggedIn} /> } />
+        <Route path="/homePage" element={loggedIn ? <HomePage /> : <SignIn setLoggedIn={setLoggedIn} />} />
         <Route path="/userProfile" element={<UserProfie />} />
-        <Route path="/browseRecipes" element={<BrowseRecipes />} />
+        <Route path="/browseRecipes" element={<BrowseRecipes userId={userData.id} />} />
       </Routes>
       <Footer />
       <ToastContainer />
-    </BrowserRouter>    
+    </BrowserRouter>
   );
 }
 

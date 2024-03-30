@@ -1,26 +1,23 @@
-import "./BrowseRecipes.scss"
+import "./BrowseRecipes.scss";
+import 'react-toastify/dist/ReactToastify.css';
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { RecipesApi } from "./../../utils/RecipesApi";
+import { MealMasterApi } from "./../../../src/utils/utils.jsx";
 import addIcon from "./../../assets/icons/SVG/icons-add.png";
 import MealPlanTable from "./../../components/MealPlanTable/MealPlanTable.jsx";
+import { toast, ToastContainer } from 'react-toastify';
 
-const BrowseRecipes = () => {
+const BrowseRecipes = ({ userId }) => {
     const recipeApi = new RecipesApi();
+    const mealMasterApi = new MealMasterApi();
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const [mealType, setMealType] = useState("");
     const [mealCategory, setMealCategory] = useState("");
     const [recipes, setRecipes] = useState([]);
-
-    // const [mealsPlanData, setMealsPlanData] = useState([
-    //     { breakfast: "", lunch: "", dinner: "" },
-    //     { breakfast: "", lunch: "", dinner: "" },
-    //     { breakfast: "", lunch: "", dinner: "" },
-    //     { breakfast: "", lunch: "", dinner: "" },
-    //     { breakfast: "", lunch: "", dinner: "" },
-    //     { breakfast: "", lunch: "", dinner: "" },
-    //     { breakfast: "", lunch: "", dinner: "" }
-    // ]);
+    const [showDayInput, setShowDayInput] = useState(false);
+    const [cardId, setCardId] = useState('');
+    const [ingredientList, setIngredientList] = useState([]); //ingredient list per meal plan
 
     const [mealsPlanData, setMealsPlanData] = useState([
         { breakfast: [], lunch: [], dinner: [] },
@@ -32,8 +29,6 @@ const BrowseRecipes = () => {
         { breakfast: [], lunch: [], dinner: [] }
     ]);
 
-    const [showDayInput, setShowDayInput] = useState(false); //State varible to manage form to get a day from user
-    const [cardId, setCardId] = useState('');
     /**
      * Added to get value from Meal Category dropdown
      * @param {*} event 
@@ -45,7 +40,6 @@ const BrowseRecipes = () => {
         async function getLunchDinnerData(mealCategoryValue) {
             try {
                 const response = await recipeApi.getRecipesListAsPerCategory(mealCategoryValue);
-                console.log("lunch dinner:", response.meals);
                 setRecipes(response.meals);
             } catch (error) {
                 console.log("Error getting Lunch and Dinner Data  getLunchDinnerData()", error);
@@ -79,7 +73,6 @@ const BrowseRecipes = () => {
      * Added to add selected recipe in the meal plan
      */
     const handleAddRecipe = (recipe) => {
-        console.log("add clicked", recipe);
         setShowDayInput(true);
         setCardId(recipe.idMeal);
     }
@@ -90,16 +83,17 @@ const BrowseRecipes = () => {
     const handleDayInputChange = (event, recipeData) => {
         const inputDayValue = event.target.value;
         const index = daysOfWeek.findIndex((day) => (day.toLowerCase() === inputDayValue.toLowerCase()));
-        let ingredientList = [];
 
         async function getIngredientList() {
             try {
                 const response = await recipeApi.getIngredientList(recipeData.idMeal);
                 const meals = response.meals[0];
                 for (let i = 1; i < 20; i++) {
-                    let propertyName = "strIngredient" + i;                   
-                    if (meals[propertyName]) {
-                        ingredientList.push(meals[propertyName]);
+                    let propertyName = "strIngredient" + i;
+                    const ingredient = meals[propertyName];
+                    //Add unique ingredient to ingredientList state variable 
+                    if (ingredient && !ingredientList.includes(ingredient)) {
+                        ingredientList.push(ingredient);
                     }
                 }
             } catch (error) {
@@ -107,23 +101,13 @@ const BrowseRecipes = () => {
             }
         }
         getIngredientList();
-        const recipeLink= `https://www.themealdb.com/meal/${recipeData.idMeal}-${recipeData.strMeal.replace(/ /g, "-")}-Recipe`;
+        const recipeLink = `https://www.themealdb.com/meal/${recipeData.idMeal}-${recipeData.strMeal.replace(/ /g, "-")}-Recipe`;
 
-        // const recipeDetails = {
-        //     id: recipeData.idMeal,
-        //     name: recipeData.strMeal,
-        //     imageLink: recipeData.strMealThumb,
-        //     recipeLink: `https://www.themealdb.com/meal/${recipeData.idMeal}-${recipeData.strMeal.replace(/ /g, "-")}-Recipe`,
-        //     ingredients: ingredientList
-        // }
-
-        const recipeDetails=[];
+        //Creating Array for (breakfast,lunch,dinner) meal type
+        const recipeDetails = [];
         recipeDetails.push(recipeData.idMeal)  //0 : RecipeId 
         recipeDetails.push(recipeData.strMeal) //1:Recipe Name
-        recipeDetails.push(recipeData.strMealThumb) //2 : ImageLink
-        recipeDetails.push(recipeLink); //3:RecipeLink
-        recipeDetails.push(ingredientList); //4:ingredientList(ARRAY)
-        console.log("recipeDetails  ---->",recipeDetails);
+        recipeDetails.push(recipeLink); //2:RecipeLink
 
         let mealsArray = [...mealsPlanData]; //to change memory location of stored array
         if (mealType.toLowerCase() === "breakfast") {
@@ -131,23 +115,73 @@ const BrowseRecipes = () => {
         } else if (mealType.toLowerCase() === "lunch") {
             mealsArray[index].lunch = recipeDetails;
         } else if (mealType.toLowerCase() === "dinner") {
-            mealsArray[index].dinner =recipeDetails;
+            mealsArray[index].dinner = recipeDetails;
         }
-        console.log("Meals Array :",mealsArray);
+
         setMealsPlanData(mealsArray);
+        setIngredientList(ingredientList);
     }
 
     /**
-     * When user click on "Save Meal Plan" button, Plean will save to the backend table
+     * When user click on "Save Meal Plan" button, 
+     * Meal Plan will save to the backend table "meal_plans"
      * @param {*} event 
      */
     const handleSubmitPlan = (event) => {
+        // Do not prevent default behavior for radio buttons
+        if (event.target.type === 'radio') {
+            return;
+        }
+        // Prevent the default action of the click event
+        event.preventDefault();
 
+        // Convert IngredientList to a JSON object
+        const jsonIngredientList = JSON.stringify(ingredientList);
+
+        //Convert All Meals from Sundat to Saturday to JSONObject
+        const jsonSunday = JSON.stringify(mealsPlanData[0]);
+        const jsonMonday = JSON.stringify(mealsPlanData[1]);
+        const jsonTuesday = JSON.stringify(mealsPlanData[2]);
+        const jsonWednesday = JSON.stringify(mealsPlanData[3]);
+        const jsonThrusday = JSON.stringify(mealsPlanData[4]);
+        const jsonFriday = JSON.stringify(mealsPlanData[5]);
+        const jsonSaturday = JSON.stringify(mealsPlanData[6]);
+
+        //Create new Object MealPlansToSave
+        const mealPlansToSave = {
+            userId: userId,
+            sunday: jsonSunday,
+            monday: jsonMonday,
+            tuesday: jsonTuesday,
+            wednesday: jsonWednesday,
+            thrusday: jsonThrusday,
+            friday: jsonFriday,
+            saturday: jsonSaturday,
+            ingredients: jsonIngredientList
+        }
+
+        async function saveMealPlan(mealPlansToSave) {         
+            try {
+                const response = await mealMasterApi.saveMealPlan(mealPlansToSave);
+                if (response.status === 201) {
+                    toast.success(`${response.data.message}`, { autoClose: 1500 });
+                }
+            } catch (error) {
+                const status = error.response.status;
+                const message = error.response.data.message;
+                if (status === 409) {
+                    toast.error(`${message}`);
+                } else {
+                    console.log("Error while saving meal plan saveMealPlan()", error);
+                }
+            }
+        }
+        saveMealPlan(mealPlansToSave);
     }
 
     return (
         <>
-            <form className="recipes" onClick={handleSubmitPlan}>
+            <form className="recipes" onSubmit={handleSubmitPlan}>
                 <div className="recipes__first-column">
                     <div className="recipes__radio recipes__row">
                         <p className="recipes__radio-label">Meal Type:</p>
@@ -204,43 +238,44 @@ const BrowseRecipes = () => {
                 </div>
 
                 <div className="recipes__second-column">
-                    <MealPlanTable mealsPlanData = {mealsPlanData}/>                    
+                    <MealPlanTable mealsPlanData={mealsPlanData} />
                 </div>
             </form>
 
             <div className="card-container">
-                {   recipes?.map((recipe) => {
-                        return (
-                            <div key={recipe.idMeal} className="card-container__card">
-                                <Link to={`https://www.themealdb.com/meal/${recipe.idMeal}-${recipe.strMeal.replace(/ /g, "-")}-Recipe`}
-                                    target="_blank" className="card-container__link">
-                                    <img src={recipe.strMealThumb} alt="RecipeImage" className="card-container__image" />
-                                    <div className="card-container__recipe-name" >{recipe.strMeal} </div>
-                                </Link>
+                {recipes?.map((recipe) => {
+                    return (
+                        <div key={recipe.idMeal} className="card-container__card">
+                            <Link to={`https://www.themealdb.com/meal/${recipe.idMeal}-${recipe.strMeal.replace(/ /g, "-")}-Recipe`}
+                                target="_blank" className="card-container__link">
+                                <img src={recipe.strMealThumb} alt="RecipeImage" className="card-container__image" />
+                                <div className="card-container__recipe-name" >{recipe.strMeal} </div>
+                            </Link>
 
-                                <div className="card-container__input-container">
-                                    <img className="card-container__add-image" src={addIcon} alt="AddIconn"
-                                        onClickCapture={() => handleAddRecipe(recipe)} />
+                            <div className="card-container__input-container">
+                                <img className="card-container__add-image" src={addIcon} alt="AddIconn"
+                                    onClickCapture={() => handleAddRecipe(recipe)} />
 
-                                    {showDayInput && (recipe.idMeal === cardId) && (
-                                        <select className="card-container__day-input" id="day-select" onChange={(event) => handleDayInputChange(event, recipe)}>
-                                            <option value="">Select a Day</option>
-                                            <option value="sunday">Sunday</option>
-                                            <option value="monday">Monday</option>
-                                            <option value="tuesday">Tuesday</option>
-                                            <option value="wednesday">Wednesday</option>
-                                            <option value="thursday">Thursday</option>
-                                            <option value="friday">Friday</option>
-                                            <option value="saturday">Saturday</option>
-                                        </select>
-                                    )}
-                                </div>
-
+                                {showDayInput && (recipe.idMeal === cardId) && (
+                                    <select className="card-container__day-input" id="day-select" onChange={(event) => handleDayInputChange(event, recipe)}>
+                                        <option value="">Select a Day</option>
+                                        <option value="sunday">Sunday</option>
+                                        <option value="monday">Monday</option>
+                                        <option value="tuesday">Tuesday</option>
+                                        <option value="wednesday">Wednesday</option>
+                                        <option value="thursday">Thursday</option>
+                                        <option value="friday">Friday</option>
+                                        <option value="saturday">Saturday</option>
+                                    </select>
+                                )}
                             </div>
-                        );
-                    })
+
+                        </div>
+                    );
+                })
                 }
             </div>
+            <ToastContainer />
         </>
     );
 }
