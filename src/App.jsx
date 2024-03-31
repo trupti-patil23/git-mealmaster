@@ -8,7 +8,8 @@ import SignIn from "./components/SignIn/SignIn.jsx";
 import SignUp from "./components/SignUp/SignUp.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import UserProfie from "./components/UserProfile/UserProfie.jsx";
-import BrowseRecipes from "./../src/components/BrowseRecipes/BrowseRecipes.jsx"
+import BrowseRecipes from "./../src/components/BrowseRecipes/BrowseRecipes.jsx";
+import ViewMealPlan from "./../src/components/ViewMealPlan/ViewMealPlan.jsx";
 import { MealMasterApi } from "./utils/utils.jsx";
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -16,19 +17,23 @@ function App() {
   const mealMasterApi = new MealMasterApi();
   const [userData, setUserData] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedInUserId, setloggedInUserId] = useState();
 
   /**
-   * Added to get UserProfile data 
+   * Added to get User data using the token stored in local storage 
    */
   async function getUserProfileData() {
     // get token from localStorage if it exists/is set
     const token = localStorage.getItem("token");
 
     try {
-      const response = await mealMasterApi.getUserProfileData(token);
-      console.log("User data  ", response.data);
-      setUserData(response.data);
-      setLoggedIn(true);
+
+      if (token) {
+        const response = await mealMasterApi.getUserProfileData(token);
+        setUserData(response.data);
+        setLoggedIn(true);
+      }
+
     } catch (error) {
       const status = error.response.status;
       const message = error.response.data.error;
@@ -42,8 +47,7 @@ function App() {
   }
 
   useEffect(() => {
-    // Fetch user data using the token stored in local storage
-    getUserProfileData();
+    getUserProfileData();    
   }, []); // Run only once on component mount
 
   /*
@@ -59,11 +63,12 @@ function App() {
     <BrowserRouter>
       <Header loggedIn={loggedIn} handleLogout={handleLogout} />
       <Routes>
-        <Route path="/" element={loggedIn ? <HomePage /> : <SignIn setLoggedIn={setLoggedIn} />} />
+        <Route path="/" element={loggedIn ? <HomePage /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/homePage" element={loggedIn ? <HomePage /> : <SignIn setLoggedIn={setLoggedIn} />} />
+        <Route path="/homePage" element={loggedIn ? <HomePage /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
         <Route path="/userProfile" element={<UserProfie />} />
         <Route path="/browseRecipes" element={<BrowseRecipes userId={userData.id} />} />
+        <Route path="/viewMealPlan" element={<ViewMealPlan userId={userData.id} />} />
       </Routes>
       <Footer />
       <ToastContainer />

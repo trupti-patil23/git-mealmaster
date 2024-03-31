@@ -238,7 +238,7 @@ const BrowseRecipes = ({ userId }) => {
                 </div>
 
                 <div className="recipes__second-column">
-                    <MealPlanTable mealsPlanData={mealsPlanData} />
+                    <MealPlanTable planId = {''} mealsPlanData={mealsPlanData} />
                 </div>
             </form>
 

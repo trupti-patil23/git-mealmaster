@@ -20,7 +20,7 @@ const Header = ({ loggedIn, handleLogout }) => {
                     loggedIn ?
                         (<nav className="header-profile">
                             <NavLink to="/browseRecipes" className="header-profile__link">
-                               Create Meal Plan
+                               Browse Recipes
                             </NavLink>
 
                             <NavLink to="/viewMealPlan" className="header-profile__link">

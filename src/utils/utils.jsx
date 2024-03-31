@@ -48,13 +48,25 @@ export class MealMasterApi {
         }
     }
 
-     /**
-     * Added to save meal plan to database table meal_plans
-     * @param {*} mealPlansToSave 
-     */
-     async saveMealPlan(mealPlansToSave) {
-        try {            
+    /**
+    * Added to save meal plan to database table meal_plans
+    * @param {*} mealPlansToSave 
+    */
+    async saveMealPlan(mealPlansToSave) {
+        try {
             return await this.axios.post("/meals/saveMealPlan", mealPlansToSave);
+        } catch (error) {
+            throw (error);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} userId 
+     */
+    async getMealPlansForUser(userId) {
+        try {            
+            return await this.axios.get("/meals/viewMealPlan",  {params: {userId}});
         } catch (error) {
             throw (error);
         }

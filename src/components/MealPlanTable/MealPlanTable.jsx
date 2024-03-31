@@ -1,7 +1,7 @@
 import "./MealPlanTable.scss";
 import { Link } from "react-router-dom";
 
-const MealPlanTable = ({ mealsPlanData }) => {
+const MealPlanTable = ({ planId, mealsPlanData }) => {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return (
         <table className="plan-table">

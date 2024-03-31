@@ -7,7 +7,7 @@
     text-align: center;
     background-color:$footer_color;
     
-    @include set-font(1rem, 1.38rem, 400);
+    @include set-font(1.1rem, 1.38rem, 400);
 
     &__icons {
         padding-top: 0.3rem;
