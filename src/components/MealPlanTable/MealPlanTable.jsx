@@ -1,8 +1,8 @@
 import "./MealPlanTable.scss";
 import { Link } from "react-router-dom";
 
-const MealPlanTable = ({ planId, mealsPlanData }) => {
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MealPlanTable = ({ mealsPlanData }) => {
+    const daysOfWeek = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
     return (
         <table className="plan-table">
             <thead>
@@ -13,9 +13,9 @@ const MealPlanTable = ({ planId, mealsPlanData }) => {
             </thead>
             <tbody>
                 <td >
-                    <tr><div className="plan-table__data plan-table__heading-column" >Breakfast</div></tr>
-                    <tr><div className="plan-table__data plan-table__heading-column">Lunch</div></tr>
-                    <tr><div className="plan-table__data plan-table__heading-column">Dinner</div></tr>
+                    <tr><div className="plan-table__data plan-table__heading-column" >BREAKFAST</div></tr>
+                    <tr><div className="plan-table__data plan-table__heading-column">LUNCH</div></tr>
+                    <tr><div className="plan-table__data plan-table__heading-column">DINNER</div></tr>
                 </td>
 
                 {mealsPlanData?.map((dayMeal) => {

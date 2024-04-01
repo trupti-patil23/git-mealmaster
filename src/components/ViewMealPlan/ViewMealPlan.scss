@@ -1,0 +1,18 @@
+@use "./../../styles/partials/variables" as *;
+@use "./../../styles/partials/mixins" as *;
+
+.view-meal {  
+    &__per-plan {
+        border-bottom:2px double black;
+    }
+    
+    &__actions-row {
+        display:flex; 
+        justify-content: space-evenly;     
+    }   
+
+    &__button {
+        @include set-button-style;
+        padding:1.5rem;  
+    }
+}

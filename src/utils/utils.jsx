@@ -65,8 +65,22 @@ export class MealMasterApi {
      * @param {*} userId 
      */
     async getMealPlansForUser(userId) {
-        try {            
-            return await this.axios.get("/meals/viewMealPlan",  {params: {userId}});
+        try {
+            return await this.axios.get("/meals/viewMealPlan", { params: { userId } });
+        } catch (error) {
+            throw (error);
+        }
+    }
+
+    /**
+     * Added to delete requested meal plan by user using unique meal_plan_id from meal_plans table
+     * @param {*} mealPlanId 
+     * @returns 
+     */
+    async deleteMealPlan(mealPlanId) {
+        try {
+            const response = await this.axios.delete("/meals/deleteMealPlan", { params: { mealPlanId } });
+            return response;
         } catch (error) {
             throw (error);
         }
