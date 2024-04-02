@@ -5,8 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { MealMasterApi } from "./../../utils/utils.jsx";
 
 const SignIn = ({ setLoggedIn, setUserData }) => {
-    const mealMasterApi = new MealMasterApi();
-    const form = document.getElementById("signin");
+    const mealMasterApi = new MealMasterApi();  
     const navigate = useNavigate();
 
     /**
@@ -14,7 +13,9 @@ const SignIn = ({ setLoggedIn, setUserData }) => {
      * @param {*} event 
      */
     function handleSubmit(event) {
-        event.preventDefault();
+        event.preventDefault();       
+        const form = event.target;
+        
         const userData = {
             email: event.target.email.value,
             password: event.target.password.value

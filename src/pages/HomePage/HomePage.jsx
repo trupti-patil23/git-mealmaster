@@ -2,9 +2,15 @@ import "./HomePage.scss";
 import HomePageImage from "./../../assets/images/HomePageImage.png"
 
 const HomePage = ({userData}) => {    
+    /**
+     * Added to Capitalize first letter
+     * @param {*} value 
+     * @returns 
+     */
     function capitalizeFirstLetter(value) {
-        return value.charAt(0).toUpperCase() + value.slice(1);
+        return value && (value.charAt(0).toUpperCase() + value.slice(1));
     }
+
     return (
         <div className="homepage">
             <div className="homepage__overlay-text">Welcome {capitalizeFirstLetter(userData.firstName) + " " + capitalizeFirstLetter(userData.lastName) } </div>

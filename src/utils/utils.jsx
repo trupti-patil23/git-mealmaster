@@ -1,11 +1,33 @@
 import axios from "axios";
+
+ //Get API URL from .env file
+ export const MEALMASTER_API_URL=process.env.REACT_APP_API_URL;
+
 export class MealMasterApi {
     constructor() {
-        this.baseUrl = "http://localhost:8080";
+        this.baseUrl = MEALMASTER_API_URL; 
         this.axios = axios.create({
             baseURL: this.baseUrl,
         });
     }
+
+    /**
+     * Added to save User profile image on server
+     * @param {*} imageData 
+     */
+    async postUserProfileImage(imageData) {
+        try {
+            return await this.axios.post("/users/uploadPhoto", imageData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });           
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
 
     /**
      * Added to save new user object to database table "users"

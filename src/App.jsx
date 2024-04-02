@@ -70,7 +70,7 @@ function App() {
         <Route path="/" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/homePage" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
-        <Route path="/userProfile" element={<UserProfie />} />
+        <Route path="/userProfile" element={<UserProfie  userData={userData} />} />
         <Route path="/createMealPlan" element={<CreateMealPlan userId={userData.id} />} />
         <Route path="/viewMealPlan" element={<ViewMealPlan userId={userData.id} />} />
       </Routes>

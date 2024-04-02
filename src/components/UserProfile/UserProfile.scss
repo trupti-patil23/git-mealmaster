@@ -1,0 +1,64 @@
+@use "./../../styles/partials/variables" as *;
+@use "./../../styles/partials/mixins" as *;
+
+.user-profile {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;       
+    position: relative;
+    left:30%;
+    width:35%;
+    margin:3rem;
+    padding:2rem;
+    border-radius: 10px;
+    background-color: $primary-white;
+    box-shadow: 0 0 10px rgba(0, 0, 0,0.8); 
+
+    #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 999;
+      } 
+
+    &__image-container {
+
+    }
+
+    &__profile-image {
+        height:10rem;
+        width:10rem;
+        align-self: center;
+        margin:2rem;
+    }
+    &__container {
+        display:flex;
+        justify-content: space-between;
+    }
+
+    &__label {       
+        @include set-font(1.3rem, 1.5rem, 700);   
+        color:$table-heading-color;       
+    }
+
+    &__file {
+        margin-left: 0.6rem;
+        padding-top: 1rem;
+    }
+
+    &__button {
+        @include set-button-style; 
+        background-color: $footer_color;  
+        border-radius: 4px;               
+    }
+
+    &__profile-data {
+        display:flex;
+        gap:3rem;
+        @include set-font(1.2rem, 1.2rem, 400);   
+    }
+}

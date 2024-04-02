@@ -7,7 +7,7 @@ import { MealMasterApi } from "./../../utils/utils.jsx";
 
 const SignUp = () => {
     const mealMasterApi = new MealMasterApi();
-    const form = document.getElementById("signup");
+    //const form = document.getElementById("signup");
     const navigate = useNavigate();
 
     //Setting formData state variable for form input validations
@@ -29,6 +29,7 @@ const SignUp = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
+        const form = event.target;
 
         // Email validation (basic format check)
         var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,7 +69,7 @@ const SignUp = () => {
                 let status = "", message = "";
                 if (error.response) {
                     status = error.response.status;
-                    message = error.response.data.error;
+                    message = error.response.data.message;
                 }
                 if (status === 409) {
                     toast.error(`${message}`);
@@ -80,6 +81,7 @@ const SignUp = () => {
         postNewUser(newUserData);
         form.reset();
     }
+
     return (
         <form className="signup" onSubmit={handleSubmit}>
             <p className="signup__title">SignUp</p>
