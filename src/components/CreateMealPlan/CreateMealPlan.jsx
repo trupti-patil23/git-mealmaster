@@ -1,14 +1,14 @@
-import "./BrowseRecipes.scss";
+import "./CreateMealPlan.scss";
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { RecipesApi } from "./../../utils/RecipesApi";
-import { MealMasterApi } from "./../../../src/utils/utils.jsx";
+import { RecipesApi } from "../../utils/RecipesApi.jsx";
+import { MealMasterApi } from "../../utils/utils.jsx";
 import addIcon from "./../../assets/icons/SVG/icons-add.png";
-import MealPlanTable from "./../../components/MealPlanTable/MealPlanTable.jsx";
+import MealPlanTable from "../MealPlanTable/MealPlanTable.jsx";
 import { toast, ToastContainer } from 'react-toastify';
 
-const BrowseRecipes = ({ userId }) => {
+const CreateMealPlan = ({ userId }) => {
     const recipeApi = new RecipesApi();
     const mealMasterApi = new MealMasterApi();
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -293,4 +293,4 @@ const BrowseRecipes = ({ userId }) => {
     );
 }
 
-export default BrowseRecipes;
+export default CreateMealPlan;

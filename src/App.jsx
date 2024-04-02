@@ -8,7 +8,7 @@ import SignIn from "./components/SignIn/SignIn.jsx";
 import SignUp from "./components/SignUp/SignUp.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import UserProfie from "./components/UserProfile/UserProfie.jsx";
-import BrowseRecipes from "./../src/components/BrowseRecipes/BrowseRecipes.jsx";
+import CreateMealPlan from "./../src/components/CreateMealPlan/CreateMealPlan.jsx";
 import ViewMealPlan from "./../src/components/ViewMealPlan/ViewMealPlan.jsx";
 import { MealMasterApi } from "./utils/utils.jsx";
 import { toast, ToastContainer } from 'react-toastify';
@@ -71,7 +71,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/homePage" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
         <Route path="/userProfile" element={<UserProfie />} />
-        <Route path="/browseRecipes" element={<BrowseRecipes userId={userData.id} />} />
+        <Route path="/createMealPlan" element={<CreateMealPlan userId={userData.id} />} />
         <Route path="/viewMealPlan" element={<ViewMealPlan userId={userData.id} />} />
       </Routes>
       <Footer />

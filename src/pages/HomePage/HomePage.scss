@@ -13,12 +13,13 @@
     &__overlay-text {
         position: absolute;
         top: 6rem;
-        left: 55%;
+        left: 60%;
         color: $primary_site-color;
         background-color: rgba(0, 0, 0, 0.3); 
-        padding: 1rem 2.5rem;
+        padding: 1.5rem 2.5rem;
         border-radius: 10px;
-        @include set-font(2rem, 2rem, 700);
+        @include set-font(2.2rem, 2rem, 700);
+        font-family: cursive;
     }
 
 

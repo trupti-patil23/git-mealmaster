@@ -19,8 +19,8 @@ const Header = ({ loggedIn, handleLogout }) => {
                 {
                     loggedIn ?
                         (<nav className="header-profile">
-                            <NavLink to="/browseRecipes" className="header-profile__link">
-                               Browse Recipes
+                            <NavLink to="/createMealPlan" className="header-profile__link">
+                               Create Meal Plan
                             </NavLink>
 
                             <NavLink to="/viewMealPlan" className="header-profile__link">
