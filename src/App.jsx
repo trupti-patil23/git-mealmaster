@@ -35,8 +35,12 @@ function App() {
       }
 
     } catch (error) {
-      const status = error.response.status;
-      const message = error.response.data.error;
+      let status = "";
+      let message = "";
+      if (error.response) {
+        status = error.response.status;
+        message = error.response.data.error;
+      }
       if (status === 401) {
         toast.error(`${message}`);
       }
@@ -47,7 +51,7 @@ function App() {
   }
 
   useEffect(() => {
-    getUserProfileData();    
+    getUserProfileData();
   }, []); // Run only once on component mount
 
   /*
@@ -63,9 +67,9 @@ function App() {
     <BrowserRouter>
       <Header loggedIn={loggedIn} handleLogout={handleLogout} />
       <Routes>
-        <Route path="/" element={loggedIn ? <HomePage /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
+        <Route path="/" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/homePage" element={loggedIn ? <HomePage /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
+        <Route path="/homePage" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
         <Route path="/userProfile" element={<UserProfie />} />
         <Route path="/browseRecipes" element={<BrowseRecipes userId={userData.id} />} />
         <Route path="/viewMealPlan" element={<ViewMealPlan userId={userData.id} />} />

@@ -17,8 +17,8 @@ const MealPlanTable = ({ mealsPlanData }) => {
                     <tr><div className="plan-table__data plan-table__heading-column">LUNCH</div></tr>
                     <tr><div className="plan-table__data plan-table__heading-column">DINNER</div></tr>
                 </td>
-
-                {mealsPlanData?.map((dayMeal) => {
+ 
+                {mealsPlanData.map((dayMeal) => {
                     return (
                         <td key={dayMeal.idMeal}>
                             <tr>

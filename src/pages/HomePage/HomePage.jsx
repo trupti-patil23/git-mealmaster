@@ -1,14 +1,14 @@
 import "./HomePage.scss";
-import 'react-toastify/dist/ReactToastify.css';
-import { toast, ToastContainer } from 'react-toastify';
 import HomePageImage from "./../../assets/images/HomePageImage.png"
 
-const HomePage = () => {
+const HomePage = ({userData}) => {    
+    function capitalizeFirstLetter(value) {
+        return value.charAt(0).toUpperCase() + value.slice(1);
+    }
     return (
         <div className="homepage">
-            <img src={HomePageImage} alt="HomePageImage" className="homepage__image" />
-
-            <ToastContainer />
+            <div className="homepage__overlay-text">Welcome {capitalizeFirstLetter(userData.firstName) + " " + capitalizeFirstLetter(userData.lastName) } </div>
+            <img className="homepage__image" src={HomePageImage} alt="HomePageImage" />
         </div>
     );
 }

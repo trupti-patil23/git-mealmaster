@@ -30,67 +30,69 @@ const SignIn = ({ setLoggedIn, setUserData }) => {
 
                     if (token) {
                         // get user profile data using token
-                        const response = await mealMasterApi.getUserProfileData(token); 
+                        const response = await mealMasterApi.getUserProfileData(token);
                         setUserData(response.data);
                         setLoggedIn(true);
-                    }
-                    //setLoggedIn(true);
+                    }                  
                     navigate("/homePage");
-                    }
-                } catch (error) {
-                    const status = error.response.status;
-                    const message = error.response.data.error;
+                }
+            } catch (error) {
+                let status = "", message = "";
+                if (error.response) {
+                    status = error.response.status;
+                    message = error.response.data.error;
+                }
 
-                    if (status === 401 || status === 409) {
-                        toast.error(`${message}`);
-                    }
-                    else {
-                        console.log("Error while signing in user:", error);
-                    }
+                if (status === 401 || status === 409) {
+                    toast.error(`${message}`);
+                }
+                else {
+                    console.log("Error while signing in user:", error);
                 }
             }
-        authenticateUser(userData);
-            // form.reset();
         }
-
-        return (
-            <form className="signin" id="signin" onSubmit={handleSubmit}>
-                <p className="signin__title">SignIn</p>
-
-                <div className="signin__row">
-                    <label className="signin__label">Email Address:</label>
-                    <input
-                        className="signin__textbox"
-                        type="text"
-                        id="email"
-                        name="email"
-                        placeholder="Email Address"
-                        required
-                    />
-                </div>
-
-                <div className="signin__row">
-                    <label className="signin__label">Password:</label>
-                    <input
-                        className="signin__textbox"
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Password"
-                        required
-                    />
-                </div>
-
-                <div className="signin__row">
-                    <Link className="signup__link" to="/signup">Create an Account</Link>
-                </div>
-
-                <div className="signin__row">
-                    <button className="signin__button" type="submit">Sign In</button>
-                </div>
-                <ToastContainer />
-            </form>
-        );
+        authenticateUser(userData);
+        form.reset();
     }
 
-    export default SignIn;
+    return (
+        <form className="signin" id="signin" onSubmit={handleSubmit}>
+            <p className="signin__title">SignIn</p>
+
+            <div className="signin__row">
+                <label className="signin__label">Email Address:</label>
+                <input
+                    className="signin__textbox"
+                    type="text"
+                    id="email"
+                    name="email"
+                    placeholder="Email Address"
+                    required
+                />
+            </div>
+
+            <div className="signin__row">
+                <label className="signin__label">Password:</label>
+                <input
+                    className="signin__textbox"
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                />
+            </div>
+
+            <div className="signin__row">
+                <Link className="signup__link" to="/signup">Create an Account</Link>
+            </div>
+
+            <div className="signin__row">
+                <button className="signin__button" type="submit">Sign In</button>
+            </div>
+            <ToastContainer />
+        </form>
+    );
+}
+
+export default SignIn;

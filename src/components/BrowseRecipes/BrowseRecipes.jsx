@@ -138,45 +138,58 @@ const BrowseRecipes = ({ userId }) => {
         // Convert IngredientList to a JSON object
         const jsonIngredientList = JSON.stringify(ingredientList);
 
-        //Convert All Meals from Sundat to Saturday to JSONObject
-        const jsonSunday = JSON.stringify(mealsPlanData[0]);
-        const jsonMonday = JSON.stringify(mealsPlanData[1]);
-        const jsonTuesday = JSON.stringify(mealsPlanData[2]);
-        const jsonWednesday = JSON.stringify(mealsPlanData[3]);
-        const jsonThrusday = JSON.stringify(mealsPlanData[4]);
-        const jsonFriday = JSON.stringify(mealsPlanData[5]);
-        const jsonSaturday = JSON.stringify(mealsPlanData[6]);
+        //check if mealsPlanData has meaningful data or not,Dont save blank data  
+        let isNull = mealsPlanData.every(mealPlan =>
+            Object.values(mealPlan).every(meal => meal.length === 0)
+        );
 
-        //Create new Object MealPlansToSave
-        const mealPlansToSave = {
-            userId: userId,
-            sunday: jsonSunday,
-            monday: jsonMonday,
-            tuesday: jsonTuesday,
-            wednesday: jsonWednesday,
-            thrusday: jsonThrusday,
-            friday: jsonFriday,
-            saturday: jsonSaturday,
-            ingredients: jsonIngredientList
-        }
+        if (isNull) {         
+            toast.error("Your meal plan is empty ", { autoClose: 1500 });
+        } else { //Save meal Plan  
 
-        async function saveMealPlan(mealPlansToSave) {         
-            try {
-                const response = await mealMasterApi.saveMealPlan(mealPlansToSave);
-                if (response.status === 201) {
-                    toast.success(`${response.data.message}`, { autoClose: 1500 });
-                }
-            } catch (error) {
-                const status = error.response.status;
-                const message = error.response.data.message;
-                if (status === 409) {
-                    toast.error(`${message}`);
-                } else {
-                    console.log("Error while saving meal plan saveMealPlan()", error);
+            //Convert All Meals from Sundat to Saturday to JSONObject
+            const jsonSunday = JSON.stringify(mealsPlanData[0]);
+            const jsonMonday = JSON.stringify(mealsPlanData[1]);
+            const jsonTuesday = JSON.stringify(mealsPlanData[2]);
+            const jsonWednesday = JSON.stringify(mealsPlanData[3]);
+            const jsonThrusday = JSON.stringify(mealsPlanData[4]);
+            const jsonFriday = JSON.stringify(mealsPlanData[5]);
+            const jsonSaturday = JSON.stringify(mealsPlanData[6]);
+
+            //Create new Object MealPlansToSave
+            const mealPlansToSave = {
+                userId: userId,
+                sunday: jsonSunday,
+                monday: jsonMonday,
+                tuesday: jsonTuesday,
+                wednesday: jsonWednesday,
+                thrusday: jsonThrusday,
+                friday: jsonFriday,
+                saturday: jsonSaturday,
+                ingredients: jsonIngredientList
+            }
+
+            async function saveMealPlan(mealPlansToSave) {
+                try {
+                    const response = await mealMasterApi.saveMealPlan(mealPlansToSave);
+                    if (response.status === 201) {
+                        toast.success(`${response.data.message}`, { autoClose: 1500 });
+                    }
+                } catch (error) {
+                    let status = "", message = "";
+                    if (error.response) {
+                        status = error.response.status;
+                        message = error.response.data.message;
+                    }
+                    if (status === 409) {
+                        toast.error(`${message}`);
+                    } else {
+                        console.log("Error while saving meal plan saveMealPlan()", error);
+                    }
                 }
             }
+            saveMealPlan(mealPlansToSave);
         }
-        saveMealPlan(mealPlansToSave);
     }
 
     return (

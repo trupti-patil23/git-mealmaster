@@ -1,18 +1,43 @@
 @use "./../../styles/partials/variables" as *;
 @use "./../../styles/partials/mixins" as *;
 
-.view-meal {  
+.view-meal {
     &__per-plan {
-        border-bottom:2px double black;
+        border-bottom: 2px double black;
     }
-    
+
     &__actions-row {
-        display:flex; 
-        justify-content: space-evenly;     
-    }   
+        display: flex;
+        justify-content: space-evenly;
+    }
 
     &__button {
         @include set-button-style;
-        padding:1.5rem;  
+        padding: 1.5rem;
+    }
+
+    &__message-box {
+        background-color:$table-background-color;      
+        color:$table-heading-color;   
+        padding: 2.5rem 5rem;
+        margin: 2rem 13rem;
+        border-radius: 10px;
+        width:70%;        
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);  
+        border:1px solid $table-heading-color;
+        animation: slideIn 1.5s ease;
+        align-self: center;
+        @include set-font(1.2rem, 1.2rem, 700);      
+    }
+
+    @keyframes slideIn {
+        0% {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
     }
 }

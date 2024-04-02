@@ -60,13 +60,16 @@ const SignUp = () => {
             try {
                 const response = await mealMasterApi.postNewUser(newUserData);
                 if (response.status === 201) {
-                    toast.success(`${response.data}`, { autoClose: 1500 } );                      
+                    toast.success(`${response.data}`, { autoClose: 1500 });
                     await new Promise(resolve => setTimeout(resolve, 1500)); //sleeps for 2000
-                    navigate("/");                                  
-                }             
+                    navigate("/");
+                }
             } catch (error) {
-                const status = error.response.status;
-                const message = error.response.data.error;
+                let status = "", message = "";
+                if (error.response) {
+                    status = error.response.status;
+                    message = error.response.data.error;
+                }
                 if (status === 409) {
                     toast.error(`${message}`);
                 } else {
@@ -75,9 +78,9 @@ const SignUp = () => {
             }
         }
         postNewUser(newUserData);
-        //form.reset();
+        form.reset();
     }
-    return (     
+    return (
         <form className="signup" onSubmit={handleSubmit}>
             <p className="signup__title">SignUp</p>
 
@@ -159,7 +162,7 @@ const SignUp = () => {
                 <button className="signup__button" type="submit">Sign Up</button>
             </div>
             <ToastContainer />
-        </form>      
+        </form>
     );
 }
 

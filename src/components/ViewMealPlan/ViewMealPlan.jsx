@@ -54,26 +54,30 @@ const ViewMealPlan = ({ userId }) => {
                 perPlanArray[count][6] = mealPlan.friday_meal_plan;
                 perPlanArray[count][7] = mealPlan.saturday_meal_plan;
                 perPlanIngredientsArray[count][0] = mealPlan.meal_plan_id;
-                perPlanIngredientsArray[count][0] = mealPlan.ingredient_list;
+                perPlanIngredientsArray[count][1] = mealPlan.ingredient_list;
                 count = count + 1;
             });
 
             setMealPlanIngredientList(perPlanIngredientsArray);
             setMealPlansList(perPlanArray);
+
         } catch (error) {
-            const status = error.response;
-            const message = error.message;
-            if (status === 404) {
-                toast.error(`${message}`);
+            let status = "", message = "";
+            if (error.response) {
+                status = error.response.status;
+                message = error.response.data.message;
+            }
+            if (status === 404) {               
+                //toast.error(`${message}`);                
             } else {
-                console.log("Error while getting meal plans getMealPlansForUser()", error);
+                console.error("Error while getting meal plans getMealPlansForUser()", error);
             }
         }
     }
 
     useEffect(() => {
         getMealPlansForUser();
-    }, []); // Run only once on component mount
+    }, [mealPlansList]); // Run only once on component mount
 
     /**
      * Added to download meal plan ,to create meal_plan.csv file
@@ -89,9 +93,9 @@ const ViewMealPlan = ({ userId }) => {
             const daysOfWeek = ['', 'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
             if (index !== 0) {
                 // Access the element at index 1 of each meal array
-                const breakfast = day["breakfast"][1] || 'No Breakfast';
-                const lunch = day["lunch"][1] || 'No Lunch';
-                const dinner = day["dinner"][1] || 'No Dinner';
+                const breakfast = day["breakfast"][1] || ' ';
+                const lunch = day["lunch"][1] || ' ';
+                const dinner = day["dinner"][1] || ' ';
 
                 // Concatenate the day of the week with the breakfast, lunch, and dinner items
                 const row = `${daysOfWeek[index]}, ${breakfast}, ${lunch}, ${dinner}\n`;
@@ -102,11 +106,35 @@ const ViewMealPlan = ({ userId }) => {
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
 
         //Use FileSaver.js library to trigger the download
-        saveAs(blob, 'meal_plan.csv');
+        saveAs(blob, 'Weekly_Meal_Plan.csv');
     }
 
+    /**
+     * Added to download IngredientList for selected meal plan
+     * @param {*} mealPlanId 
+     */
     function handleIngredientsDownload(mealPlanId) {
-        console.log("Ingredients download - ", mealPlanId);
+        let ingredientListDownload = [];
+        mealPlanIngredientList.forEach((ingredient) => {
+            if (ingredient[0] === mealPlanId) {
+                ingredientListDownload = ingredient[1];
+                return;
+            }
+        });
+
+        // Create CSV content with headings
+        let csvContent = ' INGREDIENTS ,QUANTITY \n';
+
+        // Loop through the ingredientList array and append each ingredient and quantity to the CSV content
+        ingredientListDownload.forEach(ingredient =>
+            csvContent += `${ingredient},"  " \n`
+        );
+
+        // Create a Blob object containing the CSV content
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+
+        //Use FileSaver.js library to trigger the download
+        saveAs(blob, 'Ingredients.csv');
     }
 
     /**
@@ -116,21 +144,20 @@ const ViewMealPlan = ({ userId }) => {
     async function handleDeletePlan(mealPlanId) {
         try {
             const response = await mealMasterApi.deleteMealPlan(mealPlanId);
-            console.log();
+
             if (response.status === 204) {
                 toast.success(`Meal Plan got deleted successfully!`, { autoClose: 1500 });
-               // await new Promise(resolve => setTimeout(resolve, 1500)); //sleeps for 2000
-                let mealsArrayAfterDelete = [...mealPlansList];
+
                 //After deleting ,delete mealPlanId from state variable mealPlansList array 
-                mealsArrayAfterDelete = mealsArrayAfterDelete.filter(mealPlan => mealPlan.mealPlanId === mealPlanId );
+                const mealsArrayAfterDelete = mealPlansList.filter(mealPlan => mealPlan.mealPlanId === mealPlanId);
                 setMealPlansList(mealsArrayAfterDelete);
             }
         } catch (error) {
-            let status = "",message="";
-             if(error.response) {           
+            let status = "", message = "";
+            if (error.response) {
                 status = error.response.status;
                 message = error.response.data.message;
-             }
+            }
             if (status === 404) {
                 toast.error(`${message}`);
             } else {
@@ -139,9 +166,26 @@ const ViewMealPlan = ({ userId }) => {
         }
     }
 
+    /**
+     * Added to verify whether mealPlansList has meaningful data or not
+     * @param {*} mealPlansList 
+     * @returns 
+     */
+    function isEmpty(mealPlansList) {      
+        let isEmpty = true; // assuming the list is empty by default
+        for (let i = 0; i < mealPlansList.length; i++) {
+            const mealPlan = mealPlansList[i];            
+            if (mealPlan[0].mealPlanId !== "") { 
+                isEmpty = false; // if any mealPlanId is not empty, set isEmpty to false
+                break; // exit the loop
+            }
+        }   
+        return isEmpty;
+    }
+
     return (
         <div className="view-meal">
-            {mealPlansList?.map((mealPlan, index) => {
+            {!isEmpty(mealPlansList) ? (mealPlansList.map((mealPlan, index) => {
                 const mealPlanId = mealPlan[0];
                 return (
                     <div className="view-meal__per-plan" key={index}>
@@ -174,7 +218,14 @@ const ViewMealPlan = ({ userId }) => {
                         </div>
                     </div>
                 )
-            })}
+            })) :
+                (<div className="view-meal__message-box">
+                    <p>
+                        No meal plans are currently stored for you.
+                        You can create a meal plan using the 'Create Meal Plan' tab.
+                    </p>
+                </div>)}
+
             <ToastContainer />
         </div>
     );
