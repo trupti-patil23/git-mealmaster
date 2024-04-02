@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import logoImage from "./../../assets/logo/meal-master-logo.jpg"
 
 const Header = ({ loggedIn, handleLogout }) => {
-    console.log("loggedIn", loggedIn);
+    
     return (
         <>
             <header className="header">

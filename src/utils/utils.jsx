@@ -1,14 +1,26 @@
 import axios from "axios";
 
- //Get API URL from .env file
- export const MEALMASTER_API_URL=process.env.REACT_APP_API_URL;
+//Get API URL from .env file
+export const MEALMASTER_API_URL = process.env.REACT_APP_API_URL;
 
 export class MealMasterApi {
     constructor() {
-        this.baseUrl = MEALMASTER_API_URL; 
+        this.baseUrl = MEALMASTER_API_URL;
         this.axios = axios.create({
             baseURL: this.baseUrl,
         });
+    }
+
+    /**
+     * Added to get Profile picture stored at server side by axios call
+     * @param {*} userId 
+     */
+    async getUserProfileImage(userId) {
+        try {
+            return await this.axios.get("/users/getProfileImage",  { params: { userId } });
+        } catch (error) {
+            throw error;
+        }
     }
 
     /**
@@ -21,13 +33,11 @@ export class MealMasterApi {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
-            });           
+            });
         } catch (error) {
             throw error;
         }
-
     }
-
 
     /**
      * Added to save new user object to database table "users"
