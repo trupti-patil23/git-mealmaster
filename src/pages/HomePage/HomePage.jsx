@@ -1,7 +1,7 @@
 import "./HomePage.scss";
-import HomePageImage from "./../../assets/images/HomePageImage.png"
+import HomePageImage from "./../../assets/images/HomePageImage.jpg";
 
-const HomePage = ({userData}) => {    
+const HomePage = ({ userData }) => {
     /**
      * Added to Capitalize first letter
      * @param {*} value 
@@ -13,7 +13,7 @@ const HomePage = ({userData}) => {
 
     return (
         <div className="homepage">
-            <div className="homepage__overlay-text">Welcome {capitalizeFirstLetter(userData.firstName) + " " + capitalizeFirstLetter(userData.lastName) } </div>
+            <div className="homepage__overlay-text">Welcome {capitalizeFirstLetter(userData.firstName) + " " + capitalizeFirstLetter(userData.lastName)} </div>
             <img className="homepage__image" src={HomePageImage} alt="HomePageImage" />
         </div>
     );

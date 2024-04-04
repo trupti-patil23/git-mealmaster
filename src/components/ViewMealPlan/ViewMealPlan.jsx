@@ -67,8 +67,8 @@ const ViewMealPlan = ({ userId }) => {
                 status = error.response.status;
                 message = error.response.data.message;
             }
-            if (status === 404) {               
-                //toast.error(`${message}`);                
+            if (status === 404) { 
+                console.log(`${message}`) ;                             
             } else {
                 console.error("Error while getting meal plans getMealPlansForUser()", error);
             }
@@ -146,7 +146,7 @@ const ViewMealPlan = ({ userId }) => {
             const response = await mealMasterApi.deleteMealPlan(mealPlanId);
 
             if (response.status === 204) {
-                toast.success(`Meal Plan got deleted successfully!`, { autoClose: 1500 });
+                toast.success(`Meal Plan got deleted successfully!`, { autoClose: 800 });
 
                 //After deleting ,delete mealPlanId from state variable mealPlansList array 
                 const mealsArrayAfterDelete = mealPlansList.filter(mealPlan => mealPlan.mealPlanId === mealPlanId);

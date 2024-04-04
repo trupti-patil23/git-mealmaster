@@ -16,8 +16,7 @@ import { toast, ToastContainer } from 'react-toastify';
 function App() {
   const mealMasterApi = new MealMasterApi();
   const [userData, setUserData] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [loggedInUserId, setloggedInUserId] = useState();
+  const [loggedIn, setLoggedIn] = useState(false);  
 
   /**
    * Added to get User data using the token stored in local storage 

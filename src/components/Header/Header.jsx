@@ -1,6 +1,6 @@
 import "./Header.scss";
 import { Link, NavLink } from "react-router-dom";
-import logoImage from "./../../assets/logo/meal-master-logo.jpg"
+import logoImage from "./../../assets/logo/meal-master-logo.png"
 
 const Header = ({ loggedIn, handleLogout }) => {
     
@@ -14,7 +14,7 @@ const Header = ({ loggedIn, handleLogout }) => {
                     </Link>
                 </div>
 
-                <p className="header__title">Your Ultimate Meal Planning Companion!</p>              
+                {/* <p className="header__title">Your Ultimate Meal Planning Companion!</p>               */}
 
                 {
                     loggedIn ?

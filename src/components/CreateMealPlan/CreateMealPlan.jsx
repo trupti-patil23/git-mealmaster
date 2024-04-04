@@ -144,7 +144,7 @@ const CreateMealPlan = ({ userId }) => {
         );
 
         if (isNull) {         
-            toast.error("Your meal plan is empty ", { autoClose: 1500 });
+            toast.error("Your meal plan is empty ", { autoClose: 800 });
         } else { //Save meal Plan  
 
             //Convert All Meals from Sundat to Saturday to JSONObject
@@ -173,7 +173,7 @@ const CreateMealPlan = ({ userId }) => {
                 try {
                     const response = await mealMasterApi.saveMealPlan(mealPlansToSave);
                     if (response.status === 201) {
-                        toast.success(`${response.data.message}`, { autoClose: 1500 });
+                        toast.success(`${response.data.message}`, { autoClose: 800 });
                     }
                 } catch (error) {
                     let status = "", message = "";

@@ -61,7 +61,7 @@ const SignUp = () => {
             try {
                 const response = await mealMasterApi.postNewUser(newUserData);
                 if (response.status === 201) {
-                    toast.success(`${response.data}`, { autoClose: 1500 });
+                    toast.success(`${response.data}`, { autoClose: 800 });
                     await new Promise(resolve => setTimeout(resolve, 1500)); //sleeps for 2000
                     navigate("/");
                 }

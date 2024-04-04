@@ -5,10 +5,12 @@
     background-color: $primary-white;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     margin: 0.5rem;
     border-radius: 4px;
     box-shadow: 0 0 10px rgba(155, 155, 155, 1);
+    height:7rem;
 
     #overlay {
         display: none;
@@ -21,7 +23,8 @@
     }
 
     &__logo-image {
-        height: 11rem;
+        width: 18rem;
+        height:4rem;
     }
 
     &__title {
@@ -32,8 +35,7 @@
 
 .header-profile {
     display: flex;
-    margin-top: 6rem;
-    padding-left: 1.5rem;
+    margin-top: 2.5rem;   
 
     &__link {
         @include set-navlink-style;
@@ -42,8 +44,7 @@
 
 .header-signin {
     display: flex;
-    margin-top: 6rem;
-    padding-left: 25%;
+    margin-top: 2.5rem; 
 
     &__link {
         @include set-navlink-style;

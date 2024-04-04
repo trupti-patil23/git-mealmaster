@@ -6,8 +6,9 @@
     width: 100%;
     text-align: center;
     background-color:$footer_color;
-    
-    @include set-font(1.1rem, 1.38rem, 400);
+    background-image: url($footer-image-url);    
+    @include set-font(1.2rem, 1.38rem, 700);
+    color:$primary-white;
 
     &__icons {
         padding-top: 0.3rem;
@@ -17,7 +18,7 @@
         justify-content: center;
 
         // Apply animation to the footer text
-        animation: bounce 8s infinite;
+        animation: bounce 3s infinite;
     }
 
     &__instagram {
