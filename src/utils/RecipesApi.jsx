@@ -16,7 +16,7 @@ export class RecipesApi {
             const response = await axios.get(`${this.baseUrl}/filter.php/?c=${category}`);
             return response.data;
         } catch (error) {
-            console.log("Error in getting comments: " + `${error}`);
+            console.log(`Error in getting comments: ${error}`);
         }
     }
 
@@ -25,7 +25,7 @@ export class RecipesApi {
             const response = await axios.get(`${this.baseUrl}/lookup.php?i=${recipeId}`);
             return response.data;
         } catch (error) {
-            console.log("Error in getting ingredients " + `${error}`);
+            console.log(`Error in getting ingredients ${error}`);
         }
     }
 

@@ -7,9 +7,7 @@ import instagramImage from "./../../assets/icons/SVG/Icon-instagram.svg";
 const Footer = () => {
     return (        
         <footer className="footer">
-            <p>@MealMaster All Rights Reserved.</p>
-
-           
+            <p>@MealMaster All Rights Reserved.</p>           
             <div className="footer__icons">
                 <Link to="https://www.instagram.com/" target="_blank">
                     <img className="footer__instagram" src={instagramImage} alt="instagram"></img>
