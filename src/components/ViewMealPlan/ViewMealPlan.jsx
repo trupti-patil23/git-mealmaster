@@ -24,60 +24,62 @@ const ViewMealPlan = ({ userId }) => {
         ]
     ]);
 
-    /**
-     * Added to get all meal plan for loggedin user
-     */
-    async function getMealPlansForUser() {
-        try {
-            const response = await mealMasterApi.getMealPlansForUser(userId);
-            const MealPlansArray = response.data;
+    useEffect(() => {
+        /**
+             * Added to get all meal plan for loggedin user
+             */
+        async function getMealPlansForUser() {
+            try {
+                const mealMasterApi = new MealMasterApi();
+                const response = await mealMasterApi.getMealPlansForUser(userId);
+                const MealPlansArray = response.data;
 
-            let length = MealPlansArray.length;
-            let perPlanArray = new Array(length);
-            let perPlanIngredientsArray = new Array(length);
+                let length = MealPlansArray.length;
+                let perPlanArray = new Array(length);
+                let perPlanIngredientsArray = new Array(length);
 
-            // Fill perPlanArray and perPlanIngredientsArray with arrays of length 7
-            for (let i = 0; i < length; i++) {
-                perPlanArray[i] = new Array(7);
-                perPlanIngredientsArray[i] = new Array(7);
-            }
+                // Fill perPlanArray and perPlanIngredientsArray with arrays of length 7
+                for (let i = 0; i < length; i++) {
+                    perPlanArray[i] = new Array(7);
+                    perPlanIngredientsArray[i] = new Array(7);
+                }
 
-            let count = 0;
-            MealPlansArray.map((mealPlan) => {
+                let count = 0;
+                MealPlansArray.map((mealPlan) => {
 
-                perPlanArray[count][0] = mealPlan.meal_plan_id;
-                perPlanArray[count][1] = mealPlan.sunday_meal_plan;
-                perPlanArray[count][2] = mealPlan.monday_meal_plan;
-                perPlanArray[count][3] = mealPlan.tuesday_meal_plan;
-                perPlanArray[count][4] = mealPlan.wednesday_meal_plan
-                perPlanArray[count][5] = mealPlan.thursday_meal_plan;
-                perPlanArray[count][6] = mealPlan.friday_meal_plan;
-                perPlanArray[count][7] = mealPlan.saturday_meal_plan;
-                perPlanIngredientsArray[count][0] = mealPlan.meal_plan_id;
-                perPlanIngredientsArray[count][1] = mealPlan.ingredient_list;
-                count = count + 1;
-            });
+                    perPlanArray[count][0] = mealPlan.meal_plan_id;
+                    perPlanArray[count][1] = mealPlan.sunday_meal_plan;
+                    perPlanArray[count][2] = mealPlan.monday_meal_plan;
+                    perPlanArray[count][3] = mealPlan.tuesday_meal_plan;
+                    perPlanArray[count][4] = mealPlan.wednesday_meal_plan
+                    perPlanArray[count][5] = mealPlan.thursday_meal_plan;
+                    perPlanArray[count][6] = mealPlan.friday_meal_plan;
+                    perPlanArray[count][7] = mealPlan.saturday_meal_plan;
+                    perPlanIngredientsArray[count][0] = mealPlan.meal_plan_id;
+                    perPlanIngredientsArray[count][1] = mealPlan.ingredient_list;
+                    count = count + 1;
+                    return '';
+                });
 
-            setMealPlanIngredientList(perPlanIngredientsArray);
-            setMealPlansList(perPlanArray);
+                setMealPlanIngredientList(perPlanIngredientsArray);
+                setMealPlansList(perPlanArray);
 
-        } catch (error) {
-            let status = "", message = "";
-            if (error.response) {
-                status = error.response.status;
-                message = error.response.data.message;
-            }
-            if (status === 404) { 
-                console.log(`${message}`) ;                             
-            } else {
-                console.error("Error while getting meal plans getMealPlansForUser()", error);
+            } catch (error) {
+                let status = "", message = "";
+                if (error.response) {
+                    status = error.response.status;
+                    message = error.response.data.message;
+                }
+                if (status === 404) {
+                    console.log(`${message}`);
+                } else {
+                    console.error("Error while getting meal plans getMealPlansForUser()", error);
+                }
             }
         }
-    }
 
-    useEffect(() => {
         getMealPlansForUser();
-    }, [mealPlansList]); // Run only once on component mount
+    }, [mealPlansList,userId]); 
 
     /**
      * Added to download meal plan ,to create meal_plan.csv file
@@ -171,15 +173,15 @@ const ViewMealPlan = ({ userId }) => {
      * @param {*} mealPlansList 
      * @returns 
      */
-    function isEmpty(mealPlansList) {      
+    function isEmpty(mealPlansList) {
         let isEmpty = true; // assuming the list is empty by default
         for (let i = 0; i < mealPlansList.length; i++) {
-            const mealPlan = mealPlansList[i];            
-            if (mealPlan[0].mealPlanId !== "") { 
+            const mealPlan = mealPlansList[i];
+            if (mealPlan[0].mealPlanId !== "") {
                 isEmpty = false; // if any mealPlanId is not empty, set isEmpty to false
                 break; // exit the loop
             }
-        }   
+        }
         return isEmpty;
     }
 

@@ -10,20 +10,21 @@ const UserProfile = ({ userData }) => {
     const [photo, setPhoto] = useState("");
     const [imageUrl, setImageUrl] = useState(UserProfileImage);
 
-    //Added to get User Profile image name from server
-    async function getUserProfileImage(userId) {
-        try {
-            const response = await mealMasterApi.getUserProfileImage(userId); 
-            setImageUrl(`${MEALMASTER_API_URL}/images/${response.data.imageName}`);          
-            setPhoto(response.data.imageName);
-        } catch (error) {
-            console.log("Error in getUserProfileImage", error);
-        }
-    }
-
     useEffect(() => {
+        const mealMasterApi = new MealMasterApi();
+        //Added to get User Profile image name from server
+        async function getUserProfileImage(userId) {
+            try {
+                const response = await mealMasterApi.getUserProfileImage(userId);
+                setImageUrl(`${MEALMASTER_API_URL}/images/${response.data.imageName}`);
+                setPhoto(response.data.imageName);
+            } catch (error) {
+                console.log("Error in getUserProfileImage", error);
+            }
+        }
+
         getUserProfileImage(userData.id);
-    }, []); // Run only once on component mount
+    }, [userData.id]); // Run only once on component mount
 
     const handlePhotoChange = (event) => {
         const file = event.target.files[0];
@@ -51,8 +52,8 @@ const UserProfile = ({ userData }) => {
             const response = await mealMasterApi.postUserProfileImage(imageData);
             toast.success(`${response.data.message}`, { autoclose: 500 });
             //Update ProfilePicture with new image URL
-           // document.getElementById('profileImage').src = `${MEALMASTER_API_URL}/images/${photo.name}`;
-           setImageUrl(`${MEALMASTER_API_URL}/images/${photo.name}`);
+            // document.getElementById('profileImage').src = `${MEALMASTER_API_URL}/images/${photo.name}`;
+            setImageUrl(`${MEALMASTER_API_URL}/images/${photo.name}`);
         } catch (error) {
             console.error('Error uploading photo:', error);
         }
