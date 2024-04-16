@@ -11,24 +11,33 @@ const UserProfile = ({ userData }) => {
     const [imageUrl, setImageUrl] = useState(UserProfileImage);
 
     useEffect(() => {
-        const mealMasterApi = new MealMasterApi();
-        //Added to get User Profile image name from server
-        async function getUserProfileImage(userId) {
-            try {
-                const response = await mealMasterApi.getUserProfileImage(userId);
-                setImageUrl(`${MEALMASTER_API_URL}/images/${response.data.imageName}`);
-                setPhoto(response.data.imageName);
-            } catch (error) {
-                console.log("Error in getUserProfileImage", error);
-            }
+        if (userData.profileImage) {
+            setImageUrl(`${MEALMASTER_API_URL}/images/${userData.profileImage}`);
+            setPhoto(userData.profileImage);
+            console.log("ProfileImageName", userData.profileImage);
         }
 
-        getUserProfileImage(userData.id);
-    }, [userData.id]); // Run only once on component mount
+        // const mealMasterApi = new MealMasterApi();
+        // //Added to get User Profile image name from server
+        // async function getUserProfileImage(userId) {
+        //     try {
+        //         const response = await mealMasterApi.getUserProfileImage(userId);
+        //         setImageUrl(`${MEALMASTER_API_URL}/images/${response.data.imageName}`);
+        //         setPhoto(response.data.imageName);
+        //     } catch (error) {
+        //         console.log("Error in getUserProfileImage", error);
+        //     }
+        // }
+
+        // getUserProfileImage(userData.id);
+    }, []); // Run only once on component mount
 
     const handlePhotoChange = (event) => {
+
         const file = event.target.files[0];
+        console.log("file ", file);
         setPhoto(file);
+        setImageUrl(`${MEALMASTER_API_URL}/images/${file.name}`);
     };
 
     /**
@@ -43,17 +52,21 @@ const UserProfile = ({ userData }) => {
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
+            if (photo.name) {
+                let imageData = {
+                    image: photo,
+                    userId: userData.id,
+                    imageName: photo.name
+                }
 
-            let imageData = {
-                image: photo,
-                userId: userData.id,
-                imageName: photo.name
+                const response = await mealMasterApi.postUserProfileImage(imageData);
+                if (response.success) {
+                    toast.success(`${response.data.message}`, { autoclose: 500 });
+
+                    //Update ProfilePicture with new image URL           
+                    setImageUrl(`${MEALMASTER_API_URL}/images/${photo.name}`);
+                }
             }
-            const response = await mealMasterApi.postUserProfileImage(imageData);
-            toast.success(`${response.data.message}`, { autoclose: 500 });
-            //Update ProfilePicture with new image URL
-            // document.getElementById('profileImage').src = `${MEALMASTER_API_URL}/images/${photo.name}`;
-            setImageUrl(`${MEALMASTER_API_URL}/images/${photo.name}`);
         } catch (error) {
             console.error('Error uploading photo:', error);
         }
@@ -71,7 +84,7 @@ const UserProfile = ({ userData }) => {
                         type="file"
                         accept="image/*" onChange={handlePhotoChange} />
                 </div>
-                <button className="user-profile__button">Upload</button>
+                <button className="user-profile__button" type="submit">Upload</button>
             </div>
             <div>
                 <div className="user-profile__profile-data">
