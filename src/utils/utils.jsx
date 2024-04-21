@@ -9,19 +9,7 @@ export class MealMasterApi {
         this.axios = axios.create({
             baseURL: this.baseUrl,
         });
-    }
-
-    /**
-     * Added to get Profile picture stored at server side by axios call
-     * @param {*} userId 
-     */
-    // async getUserProfileImage(userId) {
-    //     try {
-    //         return await this.axios.get("/users/getProfileImage",  { params: { userId } });
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
+    }   
 
     /**
      * Added to save User profile image on server

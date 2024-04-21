@@ -5,7 +5,7 @@ import UserProfileImage from "./../../assets/images/blank_profile.jpg";
 import { MEALMASTER_API_URL, MealMasterApi } from "./../../utils/utils.jsx";
 import { toast, ToastContainer } from 'react-toastify';
 
-const UserProfile = ({ userData }) => {
+const UserProfile = ({userData, setHeaderImageUrl}) => {
     const mealMasterApi = new MealMasterApi();
     const [photo, setPhoto] = useState("");
     const [imageUrl, setImageUrl] = useState(UserProfileImage);
@@ -13,29 +13,12 @@ const UserProfile = ({ userData }) => {
     useEffect(() => {
         if (userData.profileImage) {
             setImageUrl(`${MEALMASTER_API_URL}/images/${userData.profileImage}`);
-            setPhoto(userData.profileImage);
-            console.log("ProfileImageName", userData.profileImage);
+            setPhoto(userData.profileImage);           
         }
-
-        // const mealMasterApi = new MealMasterApi();
-        // //Added to get User Profile image name from server
-        // async function getUserProfileImage(userId) {
-        //     try {
-        //         const response = await mealMasterApi.getUserProfileImage(userId);
-        //         setImageUrl(`${MEALMASTER_API_URL}/images/${response.data.imageName}`);
-        //         setPhoto(response.data.imageName);
-        //     } catch (error) {
-        //         console.log("Error in getUserProfileImage", error);
-        //     }
-        // }
-
-        // getUserProfileImage(userData.id);
-    }, []); // Run only once on component mount
+    }, [userData.profileImage]); 
 
     const handlePhotoChange = (event) => {
-
-        const file = event.target.files[0];
-        console.log("file ", file);
+        const file = event.target.files[0];          
         setPhoto(file);
         setImageUrl(`${MEALMASTER_API_URL}/images/${file.name}`);
     };
@@ -52,6 +35,7 @@ const UserProfile = ({ userData }) => {
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
+           
             if (photo.name) {
                 let imageData = {
                     image: photo,
@@ -60,11 +44,12 @@ const UserProfile = ({ userData }) => {
                 }
 
                 const response = await mealMasterApi.postUserProfileImage(imageData);
-                if (response.success) {
-                    toast.success(`${response.data.message}`, { autoclose: 500 });
-
+                
+                if (response.status===201) {
+                    //toast.success(`${response.data.message}`, { autoclose: 500 });
                     //Update ProfilePicture with new image URL           
-                    setImageUrl(`${MEALMASTER_API_URL}/images/${photo.name}`);
+                    setImageUrl(prevUrl =>`${MEALMASTER_API_URL}/images/${photo.name}`);
+                    setHeaderImageUrl(prevUrl =>`${MEALMASTER_API_URL}/images/${photo.name}`); 
                 }
             }
         } catch (error) {
@@ -84,7 +69,7 @@ const UserProfile = ({ userData }) => {
                         type="file"
                         accept="image/*" onChange={handlePhotoChange} />
                 </div>
-                <button className="user-profile__button" type="submit">Upload</button>
+                <button className="user-profile__button">Upload</button>
             </div>
             <div>
                 <div className="user-profile__profile-data">

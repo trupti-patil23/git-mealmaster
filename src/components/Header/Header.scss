@@ -35,10 +35,25 @@
 
 .header-profile {
     display: flex;
-    margin-top: 2.5rem;   
+    margin: 2.5rem 2rem 2rem 0;  
+    gap:2rem; 
 
     &__link {
         @include set-navlink-style;
+    }
+
+    &__image {
+        width: 3.5rem;
+        height: 3.5rem;      
+        align-self: center;
+        margin: 2rem;
+        border-radius: 50rem;
+        margin-right: 1rem;
+    }
+
+    &__user-name{
+        color:$primary_site-color;
+        font-weight: 700;
     }
 }
 

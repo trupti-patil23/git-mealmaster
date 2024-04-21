@@ -7,18 +7,60 @@
     width: 100%;
 
     &__image {
-        width: 100%;
+        width: 100%;       
     }
 
     &__overlay-text {
         position: absolute;
-        top: 6rem;
-        left: 43%;
-        color: $primary_site-color;
-        background-color: rgba(0, 0, 0, 0.3); 
-        padding: 1.5rem 2.5rem;
-        border-radius: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        top: 5rem;
+        left: 48%;
+        color: $primary_site-color;    
         @include set-font(2.2rem, 2rem, 700);
         font-family: cursive;
+    }
+
+    &__container {       
+        font-family: cursive;      
+        font-weight:bold;
+        text-align:center;   
+        border-radius: 10px; 
+        color:$primary-white;   
+        text-shadow: 2px 2px 4px rgba(255, 166, 96, 0.8);
+    }
+
+    &__heading {
+        @include set-font(1.8rem, 2rem, 600);       
+        position: absolute;
+        top: 12rem;
+        left: 48%;      
+    }
+
+    &__meal {       
+        @include set-font(1.3rem, 2rem, 600);
+        position: absolute;
+        top: 20rem;
+        left: 30%;      
+    }  
+
+    &__phone {       
+        @include set-font(1.3rem, 2rem, 600);
+        position: absolute;
+        top: 21rem;
+        left: 45%;           
+    }  
+
+    &__download{
+        @include set-font(1.3rem, 2rem, 600);
+        position: absolute;
+        top: 20.5rem;
+        left: 63%;         
+    }
+
+    &__download-ingredient{
+        @include set-font(1.3rem, 2rem, 600);
+        position: absolute;
+        top: 20rem;
+        left: 80%; 
     }
 }

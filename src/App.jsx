@@ -12,10 +12,12 @@ import CreateMealPlan from "./../src/components/CreateMealPlan/CreateMealPlan.js
 import ViewMealPlan from "./../src/components/ViewMealPlan/ViewMealPlan.jsx";
 import { MealMasterApi } from "./utils/utils.jsx";
 import { toast, ToastContainer } from 'react-toastify';
+import UserProfileImage from "./assets/images/blank_profile.jpg";
 
-function App() { 
+function App() {
   const [userData, setUserData] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [headerImageUrl, setHeaderImageUrl] = useState(UserProfileImage);
 
   useEffect(() => {
     /**
@@ -63,12 +65,12 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header loggedIn={loggedIn} handleLogout={handleLogout} />
+      <Header loggedIn={loggedIn} handleLogout={handleLogout}  headerImageUrl={headerImageUrl} userData={userData} />
       <Routes>
         <Route path="/" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/homePage" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
-        <Route path="/userProfile" element={<UserProfie userData={userData} />} />
+        <Route path="/userProfile" element={<UserProfie userData={userData} setHeaderImageUrl={setHeaderImageUrl}/>} />
         <Route path="/createMealPlan" element={<CreateMealPlan userId={userData.id} />} />
         <Route path="/viewMealPlan" element={<ViewMealPlan userId={userData.id} />} />
       </Routes>
