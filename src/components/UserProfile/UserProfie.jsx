@@ -3,9 +3,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect } from "react";
 import UserProfileImage from "./../../assets/images/blank_profile.jpg";
 import { MEALMASTER_API_URL, MealMasterApi } from "./../../utils/utils.jsx";
-import { toast, ToastContainer } from 'react-toastify';
 
-const UserProfile = ({userData, setHeaderImageUrl}) => {
+const UserProfile = ({ userData, setHeaderImageUrl }) => {
     const mealMasterApi = new MealMasterApi();
     const [photo, setPhoto] = useState("");
     const [imageUrl, setImageUrl] = useState(UserProfileImage);
@@ -13,14 +12,15 @@ const UserProfile = ({userData, setHeaderImageUrl}) => {
     useEffect(() => {
         if (userData.profileImage) {
             setImageUrl(`${MEALMASTER_API_URL}/images/${userData.profileImage}`);
-            setPhoto(userData.profileImage);           
+            setPhoto(userData.profileImage);
         }
-    }, [userData.profileImage]); 
+    }, [userData.profileImage]);
 
     const handlePhotoChange = (event) => {
-        const file = event.target.files[0];          
+        const file = event.target.files[0];
         setPhoto(file);
-        setImageUrl(`${MEALMASTER_API_URL}/images/${file.name}`);
+        const newImageUrl = URL.createObjectURL(file);
+        setImageUrl(newImageUrl);
     };
 
     /**
@@ -35,7 +35,6 @@ const UserProfile = ({userData, setHeaderImageUrl}) => {
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
-           
             if (photo.name) {
                 let imageData = {
                     image: photo,
@@ -44,12 +43,11 @@ const UserProfile = ({userData, setHeaderImageUrl}) => {
                 }
 
                 const response = await mealMasterApi.postUserProfileImage(imageData);
-                
-                if (response.status===201) {
-                    //toast.success(`${response.data.message}`, { autoclose: 500 });
+
+                if (response.status === 201) {                       
                     //Update ProfilePicture with new image URL           
-                    setImageUrl(prevUrl =>`${MEALMASTER_API_URL}/images/${photo.name}`);
-                    setHeaderImageUrl(prevUrl =>`${MEALMASTER_API_URL}/images/${photo.name}`); 
+                    setImageUrl(`${MEALMASTER_API_URL}/images/${photo.name}`);
+                    setHeaderImageUrl(`${MEALMASTER_API_URL}/images/${photo.name}`);
                 }
             }
         } catch (error) {
@@ -81,8 +79,7 @@ const UserProfile = ({userData, setHeaderImageUrl}) => {
                     <p className="user-profile__label">Email: </p>
                     <p>{userData.email}</p>
                 </div>
-            </div>
-            <ToastContainer />
+            </div>           
         </form>
     );
 }

@@ -19,10 +19,10 @@ const Header = ({ loggedIn, handleLogout, headerImageUrl, userData }) => {
     };
 
     useEffect(() => {
-        if (userData) {           
+        if (userData && userData.profileImage) {           
             setProfileHeaderImageUrl(`${MEALMASTER_API_URL}/images/${userData.profileImage}`);
         }
-    }, [userData])//Run only once on component mount
+    }, [userData])
 
     useEffect(() => {
         setProfileHeaderImageUrl(headerImageUrl);
