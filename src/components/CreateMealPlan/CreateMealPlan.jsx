@@ -53,6 +53,12 @@ const CreateMealPlan = ({ userId }) => {
      * @param {*} value 
      */
     const handleRadioChange = (value) => {
+        // When Radio button option(Bf,Lunch or Dinner) changes,set  Recipes and  MealCategory state variable to null
+        setRecipes(null); 
+        if(mealType !== "breakfast" ) {           
+            setMealCategory("");
+        }     
+
         setMealType(value);
         if (value === "breakfast") {
             async function getBreakfastData() {
@@ -231,7 +237,7 @@ const CreateMealPlan = ({ userId }) => {
                             <label htmlFor="dinner">Dinner</label>
                         </div>
                     </div>
-                    {mealType !== "breakfast" && (
+                    {mealType && mealType !== "breakfast" && (
                         <div className="recipes__row">
                             <label htmlFor="food-select" className="recipes__dropdown-label">Meal Category:</label>
                             <select className="recipes__dropdown-value" id="food-select" value={mealCategory} onChange={handleMealCategoryChange}>
