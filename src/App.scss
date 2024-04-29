@@ -1,7 +1,10 @@
 @use "./../src/styles/partials/typography" as *;
+@use "./../src/styles/partials/variables" as *;
+@use "./../src/styles/partials/mixins" as *;
+
 
 * {
-    box-sizing: border-box;   
+    box-sizing: border-box;
 }
 
 body {
@@ -16,4 +19,21 @@ select,
 textarea {
     font-family: inherit;
     /* Inherits font from parent (body) */
+}
+
+.apps {
+    background-color: $table-background-color;
+    display: table-cell;   
+    color: $primary-white;
+    padding: 2.5rem 5rem;
+    margin: 2rem 13rem;
+    border-radius: 10px;
+    width: 70%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid $table-heading-color;
+    animation: slideIn 1.5s ease;
+    align-self: center;
+    @include set-font(1.2rem, 1.2rem, 700);
+    background-image: url('./assets/images/footer.jpg');
+    background-size: cover;
 }

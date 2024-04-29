@@ -18,8 +18,20 @@ function App() {
   const [userData, setUserData] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [headerImageUrl, setHeaderImageUrl] = useState(UserProfileImage);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1280);
 
   useEffect(() => {
+
+    const handleResize = () => {
+      if (window.innerWidth < 1280) {
+        setIsDesktop(false);   
+      } else {
+        setIsDesktop(true);      
+      }
+    };
+
+    window.addEventListener('resize', handleResize);   
+
     /**
    * Added to get User data using the token stored in local storage 
    */
@@ -64,19 +76,30 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <Header loggedIn={loggedIn} handleLogout={handleLogout}  headerImageUrl={headerImageUrl} userData={userData} />
-      <Routes>
-        <Route path="/" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/homePage" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
-        <Route path="/userProfile" element={<UserProfie userData={userData} setHeaderImageUrl={setHeaderImageUrl}/>} />
-        <Route path="/createMealPlan" element={<CreateMealPlan userId={userData.id} />} />
-        <Route path="/viewMealPlan" element={<ViewMealPlan userId={userData.id} />} />
-      </Routes>
-      <Footer />
-      <ToastContainer />
-    </BrowserRouter>
+    <>
+      {!isDesktop
+        ? (
+          <div className="apps">
+            Please use desktop view(1280 PX) for the best experience.For an enhanced browsing experience, we recommend utilizing the desktop layout optimized for screens with a width of 1280 pixels or larger.
+          </div>
+        ) 
+        : (
+          <BrowserRouter>
+            <Header loggedIn={loggedIn} handleLogout={handleLogout} headerImageUrl={headerImageUrl} userData={userData} />
+            <Routes>
+              <Route path="/" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/homePage" element={loggedIn ? <HomePage userData={userData} /> : <SignIn setLoggedIn={setLoggedIn} setUserData={setUserData} />} />
+              <Route path="/userProfile" element={<UserProfie userData={userData} setHeaderImageUrl={setHeaderImageUrl} />} />
+              <Route path="/createMealPlan" element={<CreateMealPlan userId={userData.id} />} />
+              <Route path="/viewMealPlan" element={<ViewMealPlan userId={userData.id} />} />
+            </Routes>
+            <Footer />
+            <ToastContainer />
+          </BrowserRouter>
+        )
+      }
+    </>
   );
 }
 

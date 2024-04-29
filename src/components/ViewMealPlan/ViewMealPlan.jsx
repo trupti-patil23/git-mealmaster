@@ -197,21 +197,21 @@ const ViewMealPlan = ({ userId }) => {
 
                         <div className="view-meal__actions-row">
                             <div>
-                                <button className="view-meal__button"
+                                <button className="view-meal__button view-meal__button--download" 
                                     onClick={() => { handleMealDownload(mealPlanId, mealPlan) }}>
                                     Download Meal Plan
                                 </button>
                             </div>
 
                             <div>
-                                <button className="view-meal__button"
+                                <button className="view-meal__button view-meal__button--download"
                                     onClick={() => handleIngredientsDownload(mealPlanId)}>
                                     Download Ingredients
                                 </button>
                             </div>
 
                             <div>
-                                <button className="view-meal__button"
+                                <button className="view-meal__button view-meal__button--delete"
                                     onClick={() => handleDeletePlan(mealPlanId)}>
                                     Delete Meal Plan
                                 </button>
