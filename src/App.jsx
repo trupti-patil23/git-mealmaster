@@ -80,7 +80,7 @@ function App() {
       {!isDesktop
         ? (
           <div className="apps">
-            Please use desktop view(1280 PX) for the best experience.For an enhanced browsing experience, we recommend utilizing the desktop layout optimized for screens with a width of 1280 pixels or larger.
+            For an enhanced browsing experience, we recommend utilizing the desktop layout optimized for screens with a width of 1280 pixels or larger.
           </div>
         ) 
         : (
