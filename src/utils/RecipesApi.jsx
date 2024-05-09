@@ -20,6 +20,11 @@ export class RecipesApi {
         }
     }
 
+    /**
+     * This method gives the list of ingredients, for given RecipeId
+     * @param {*} recipeId 
+     * @returns 
+     */
     async getIngredientList(recipeId) {
         try {
             const response = await axios.get(`${this.baseUrl}/lookup.php?i=${recipeId}`);
